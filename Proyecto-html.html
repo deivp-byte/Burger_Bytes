@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/responsive.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <title>Burger Bytes - Retro Food</title>
+</head>
+
+<body> 
+    
+    <video autoplay muted loop id="bg-video">
+        <source src="imagenes/PixVerse_V5_Image_Text_720P_quiero_crear_una_i.mp4" type="video/mp4">
+        Tu navegador no soporta el vídeo de fondo.
+    </video>
+
+    <header class="header">
+        <nav>
+            <img src="imagenes/logo.png" width="100" height="100" alt="Logo de Burger Bytes">
+            <ul>
+                <li><a href="#ofertas-section">Ofertas</a></li>
+                <li><a href="#topbytes-section">Top Bytes</a></li>
+                <li><a href="#carta-section">Carta</a></li>
+                <li><a href="#ubicacion-section">Ubicación</a></li>
+                <li><a href="#contacto-section">Contacto</a></li>
+            </ul>
+            
+            <div class="cart-icon" id="cart-counter" title="Abrir Carrito">🛒 (0)</div>
+            
+        </nav>
+        <h1 class="typewriter"><strong>BURGER BYTES</strong></h1>
+    </header>
+
+    <main>
+        
+        <section class="top" id="ofertas-section"> 
+            <h1>OFERTA DE LA SEMANA</h1>
+            <div class="special-offer-card">
+                <h2>⭐ Double Cheese Megablast ⭐</h2>
+                <p> Hamburguesa especial Double Cheese </p>
+                <p>¡Dos carnes, triple queso y salsa secreta de la abuela pixelada por solo 8€! ¡Byte it!</p>
+                <button class="add-to-cart-btn">¡Pedir Oferta!</button>
+            </div>
+        </section>
+        
+        <section class="top" id="topbytes-section"> 
+            <h1>TOP BYTES</h1>
+            <div class="section">
+                <article id="hamburgesa1" class="card-item">
+                    <h4>Cheese Chees</h4>
+                    <img src="imagenes/Hamburguesa gourmet con queso derretido.png" width="300" height="300" alt="Hamburguesa con queso derretido">
+                    <p>Burger llena de queso chedar derretido con un toque picantón y delicioso</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="hamburgesa2" class="card-item">
+                    <h4>Extreme Bacon</h4>
+                    <img src="imagenes/ChatGPT Image 2 nov 2025, 14_50_23.png" width="300" height="300" alt="Hamburguesa con abundante bacon">
+                    <p>Burger de sabor puro bacon para amantes</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="hamburgesa3" class="card-item">
+                    <h4>Extra Super Crispy</h4>
+                    <img src="imagenes/Sándwich de pollo crujiente y fresco.png" width="300" height="300" alt="Sándwich de pollo crujiente">
+                    <p>Pollo crujientre y lleno de sabor</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+            </div>
+        </section>
+
+        <section id="carta-section">
+            <div class="header2">
+                <h1>Carta Completa</h1>
+            </div>
+            <div class="section2">
+                <article id="carta1" class="card-item">
+                    <h4>Wild West Burger</h4>
+                    <img src="imagenes/wild west.png" width="300" height="300" alt="Wild West Burger con aros de cebolla">
+                    <p>Jugosa carne de res con queso cheddar fundido, tiras de bacon crujiente, aros de cebolla y una capa generosa de salsa BBQ ahumada.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+                
+                <article id="carta6" class="card-item">
+                    <h4>Aloha Burger</h4>
+                    <img src="imagenes/aloha burger.png" width="300" height="300" alt="Aloha Burger con piña a la parrilla">
+                    <p>Hamburguesa tropical con carne de res, queso, bacon, lechuga fresca y una rodaja de piña a la parrilla.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+                
+                <article id="carta7" class="card-item">
+                    <h4>Pixel Pulled Pork</h4>
+                    <img src="imagenes/pulledpork.png" width="300" height="300" alt="Hamburguesa de cerdo desmenuzado">
+                    <p>Cerdo desmenuzado ahumado con salsa de mostaza y miel y col crujiente.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta8" class="card-item">
+                    <h4>Tokyo Teriyaki</h4>
+                    <img src="imagenes/tokyo.png" width="300" height="300" alt="Hamburguesa con salsa Teriyaki">
+                    <p>Carne de res bañada en salsa teriyaki, alga nori y mayonesa de wasabi.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta9" class="card-item">
+                    <h4>Veggie Byte</h4>
+                    <img src="imagenes/veggie.png" width="300" height="300" alt="Hamburguesa vegana de garbanzos">
+                    <p>Hamburguesa vegana de garbanzos y espinacas con pan de semillas y salsa de yogurt.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta10" class="card-item">
+                    <h4>Spicy Inferno</h4>
+                    <img src="imagenes/spicy.png" width="300" height="300" alt="Hamburguesa muy picante">
+                    <p>Carne con chile habanero, queso fantasma y salsa ultra picante. Solo para valientes.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta11" class="card-item">
+                    <h4>The Godfather</h4>
+                    <img src="imagenes/godfather.png" width="300" height="300" alt="Hamburguesa con pesto y mozzarella">
+                    <p>Carne de res con pesto, mozzarella fresca y tomate seco. Un clásico italiano.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta12" class="card-item">
+                    <h4>Crispy Onion</h4>
+                    <img src="imagenes/crispy onion.png" width="300" height="300" alt="Hamburguesa con cebolla crujiente">
+                    <p>Carne de res con queso suizo y una montaña de cebolla frita crujiente.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta13" class="card-item">
+                    <h4>Choco Overload</h4>
+                    <img src="imagenes/choco overloadpng.png" width="300" height="300" alt="Batido de triple chocolate">
+                    <p>Batido espeso de triple chocolate con trozos de galleta.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+
+                <article id="carta14" class="card-item">
+                    <h4>Strawberry Dream</h4>
+                    <img src="imagenes/strawberry dream.png" width="300" height="300" alt="Batido de fresa y vainilla">
+                    <p>Batido de fresa natural con un toque de vainilla y nata montada pixelada.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+                
+                <article id="carta15" class="card-item">
+                    <h4>Mint Condition</h4>
+                    <img src="imagenes/mind condition.png" width="300" height="300" alt="Batido de menta y chocolate">
+                    <p>Batido refrescante de menta y chocolate con un efecto frío extremo.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+                
+                <article id="carta16" class="card-item">
+                    <h4>Coffee Boost</h4>
+                    <img src="imagenes/coffe boost.png" width="300" height="300" alt="Batido de café y caramelo">
+                    <p>Batido energético de café espresso y caramelo. Ideal para recargar vidas.</p>
+                    <button class="add-to-cart-btn">Añadir</button>
+                </article>
+                </div>
+        </section>
+        
+        <section class="top" id="ubicacion-section">
+            <h1>Byte Point </h1>
+            <div class="location-container">
+                <div class="map-placeholder" id="map-area"> 
+                   <img src="./imagenes/unnamed.jpg" width="300" height="300" alt="Mapa de la ubicación">
+                </div>
+                
+                <div class="hours-info">
+                    <h2>Horario de Apertura</h2>
+                    <ul>
+                        <li>**Lunes a Viernes:** 13:00h - 16:00h | 20:00h - 23:30h</li>
+                        <li>**Sábados:** 13:00h - 00:00h</li>
+                        <li>**Domingos:** Cerrado (Maintenance Byte)</li>
+                    </ul>
+                    <p>Dirección: Calle Pixel Art, 1980, Vic, España</p>
+                    
+                    <a href="#" class="button-link" id="toggle-map-btn">Ver en Mapa (Pixel Mode)</a>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="contacto" id="contacto-section">
+            <h1>Contacto | ¡Get a Byte!</h1>
+        
+            <div class="formulari">
+                <form action="#" method="POST" class="box">
+                    <label for="email">Email*</label>
+                    <input type="email" id="email" name="email" placeholder="steve@gmail.com" required>
+
+                    <label for="asunto">Asunto</label>
+                    <input type="text" id="asunto" name="asunto" placeholder="...">
+
+                    <label for="mensaje">Mensaje</label>
+                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="....."></textarea> 
+
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 600 123 456"> 
+
+                    <button type="submit">Enviar</button>
+                </form>
+            </div>
+        </section>
+        
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <img src="./imagenes/logo.png" width="80" height="80" alt="Logo de Burger Bytes">
+            
+            <div class="footer-links">
+                <h2><a href="#topbytes-section">TOP BYTES</a></h2>
+                <h2><a href="#carta-section">CARTA</a></h2>
+            </div>
+            
+            <div class="social-media">
+                <p>Síguenos:</p>
+                <img class="social-icon" src="./imagenes/Captura de pantalla 2025-11-26 180357.png" width="30" height="30" alt="Icono de Twitter Pixel Art">
+                <img class="social-icon" src="./imagenes/Captura de pantalla 2025-11-26 180118.png" width="30" height="30" alt="Icono de Instagram Pixel Art">
+                <img class="social-icon" src="./imagenes/Captura de pantalla 2025-11-26 180230.png" width="30" height="30" alt="Icono de Facebook Pixel Art">
+            </div>
+
+            <div class="credits">
+                <p>© 2025 Burger Bytes | Universitat de Vic</p>
+                <p>Vídeos: Pixeverse | Imágenes: ChatGPT</p>
+            </div>
+        </div>
+    </footer>
+
+    <aside id="cart-sidebar">
+        <div class="sidebar-header">
+            <h2>🛒 Tu Pedido</h2>
+            <button class="close-btn" id="close-sidebar">X</button>
+        </div>
+        
+        <ul id="cart-list" class="sidebar-list">
+            </ul>
+
+        <div class="sidebar-footer">
+            <p>Importe Total: <span id="cart-total-items">0</span> Bytes</p>
+            
+            <button class="clear-all-btn" id="clear-all-btn">Vaciar Carrito</button>
+            
+            <button class="checkout-btn">IR A PAGAR</button>
+        </div>
+    </aside>
+
+    <script src="js/main.js"></script> 
+</body>
+</html>

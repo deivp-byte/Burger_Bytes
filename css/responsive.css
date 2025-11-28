@@ -1,0 +1,747 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+/* --- 0. Variables y Base --- */
+:root {
+    --pixel-font: "Pixelify Sans", sans-serif;
+    --primary-red: rgba(165, 42, 42, 0.774); 
+    --primary-yellow: rgba(255, 255, 0, 0.829);
+    --primary-green: #6ba733bb;
+    --dark-bg: rgba(0, 0, 0, 0.699);
+    --form-bg: rgba(0, 0, 0, 0.767);
+    --border-radius: 10px;
+}
+
+body {
+    height: 100%;
+    overflow-x: hidden;
+    font-family: var(--pixel-font);
+    margin: 0;
+    padding: 0;
+    color: black;
+}
+
+/* --- 1. Fondo y Efectos Generales --- */
+#bg-video {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: cover;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+/* --- 2. Header y Navegación --- */
+.header {
+    position: sticky;
+    top: 0;
+    transition: all 0.3s ease;
+    width: 100%;
+    height: 300px;
+    background-color: var(--primary-yellow);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    z-index: 100;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: space-around; 
+    padding: 10px 0;
+}
+
+.header nav {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.header ul {
+    list-style: none;
+    display: flex;
+    justify-content: center; 
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header li {
+    line-height: 40px;
+    padding: 8px 10px;
+    text-align: center;
+    border-radius: 5px;
+    border: 5px solid black;
+    transition: all 0.2s ease;
+}
+
+.header li:hover {
+    color: white;
+    background-color: red;
+    border-radius: 10px;
+    transform: scale(1.05);
+}
+
+.header a {
+    text-decoration: none;
+    color: black;
+}
+
+/* Efecto Typewriter */
+.typewriter {
+    --typewriter-steps: 12; 
+    --typewriter-speed: 2s;
+
+    width: 12ch; 
+    overflow: hidden; 
+    white-space: nowrap;
+    text-align: center;
+    font-size: 100px;
+    margin: 0;
+    border-right: 5px solid black; 
+    
+    animation: typing var(--typewriter-speed) steps(var(--typewriter-steps), end),
+               blink-cursor 0.75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 12ch }
+}
+
+@keyframes blink-cursor {
+    from, to { border-color: transparent }
+    50% { border-color: black }
+}
+
+/* CARRITO: CONTADOR VISIBLE */
+.cart-icon {
+    font-size: 24px;
+    padding: 5px 10px;
+    border: 3px solid black;
+    background: white;
+    border-radius: 5px;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.cart-icon:hover {
+    background: lightgray;
+}
+
+/* --- ESTILOS: BARRA LATERAL DEL CARRITO (ASIDE) --- */
+
+#cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 350px;
+    height: 100%;
+    background-color: #f0f0f0; 
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000; 
+    
+    /* Animación de deslizamiento */
+    transform: translateX(100%);
+    transition: transform 0.4s ease-out;
+
+    /* Estructura Flexbox */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estado ABIERTO */
+#cart-sidebar.open {
+    transform: translateX(0);
+}
+
+/* Encabezado */
+.sidebar-header {
+    background-color: #333;
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    font-family: var(--pixel-font);
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: red;
+}
+
+/* Lista de Productos */
+.sidebar-list {
+    list-style: none;
+    padding: 10px 15px;
+    margin: 0;
+    overflow-y: auto; 
+    flex-grow: 1; 
+    color: #333;
+}
+
+/* Estilo de los ítems en el desplegable (CORREGIDO PARA ESPACIAMIENTO) */
+.sidebar-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0; 
+    border-bottom: 1px dashed #ccc; 
+    line-height: 1.2;
+    font-size: 16px;
+    margin-bottom: 5px; 
+}
+
+.sidebar-list .empty-message {
+    text-align: center;
+    padding: 50px 0;
+    font-size: 18px;
+    color: #666;
+}
+
+.remove-btn {
+    font-family: var(--pixel-font);
+    background: red;
+    color: white;
+    border: 2px solid black;
+    padding: 2px 6px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 14px;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    margin-left: 10px;
+}
+
+.remove-btn:hover {
+    background: darkred;
+}
+
+/* Pie de Carrito (Total y Botones) */
+.sidebar-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; 
+    padding: 15px;
+    background-color: white;
+    border-top: 2px solid #ccc;
+    flex-shrink: 0;
+}
+
+.sidebar-footer p {
+    width: 100%;
+    text-align: right;
+    margin: 0 0 10px 0;
+    font-size: 20px;
+    color: black;
+}
+
+.clear-all-btn, .checkout-btn {
+    font-family: var(--pixel-font);
+    border: 3px solid black;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s;
+    margin-bottom: 8px;
+}
+
+/* Estilo específico para Vaciar Carrito */
+.clear-all-btn {
+    background-color: #f44336; 
+    color: white;
+}
+
+.clear-all-btn:hover {
+    background-color: darkred;
+}
+
+/* Ajuste del botón de pago */
+.checkout-btn {
+    background-color: var(--primary-red);
+    color: white;
+    font-size: 20px;
+    margin-bottom: 0;
+}
+
+.checkout-btn:hover {
+    background-color: red;
+}
+
+
+/* --- Efectos JS --- */
+
+/* 1. Animación de rebote para el carrito */
+@keyframes cartBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.cart-icon.bounce {
+    animation: cartBounce 0.5s ease;
+    background-color: #33d02b; 
+}
+
+/* 2. Efecto de "pulsado" en el botón */
+.add-to-cart-btn.clicked {
+    background-color: #000;
+    color: #fff;
+    transform: scale(0.95);
+    border-color: #fff;
+}
+
+
+/* --- 3. Contenido y Tarjetas (Cards) --- */
+
+.top, .header2 {
+    text-align: center;
+    font-size: 40px;
+    background-color: var(--primary-green);
+    padding-bottom: 20px;
+    border-radius: var(--border-radius);
+    border: solid green;
+    margin: 40px 10px;
+}
+
+.top h1, .header2 h1 {
+    margin: 0 auto;
+    border: solid black;
+    width: auto;
+    max-width: 90%;
+    padding: 5px 15px;
+    display: inline-block;
+}
+
+.section, .section2 {
+    margin: 30px 10px;
+    width: auto;
+    background-color: var(--primary-red);
+    border-radius: var(--border-radius);
+    border: solid red;
+    padding: 20px 0;
+    
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 1.5%;
+}
+
+/* Estilo de Tarjeta de Producto (Articulo) */
+.card-item {
+    background-color: var(--dark-bg);
+    width: 30%; 
+    border-radius: var(--border-radius);
+    color: white;
+    padding: 20px 10px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
+    
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: center; 
+    text-align: center; 
+    min-height: 550px;
+}
+
+.card-item h4, .card-item p {
+    width: 90%; 
+}
+
+.card-item img {
+    margin: 10px 0;
+    border-radius: 15px;
+    transition: transform 1s ease, box-shadow 1s ease; 
+}
+
+.card-item:hover {
+    background-color: red;
+}
+
+.card-item:hover img {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.7);
+}
+
+.add-to-cart-btn {
+    font-family: var(--pixel-font);
+    font-size: 20px;
+    padding: 10px 20px;
+    margin-top: auto;
+    background-color: green;
+    color: white;
+    border: 3px solid black;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.add-to-cart-btn:hover {
+    background-color: limegreen;
+    transform: translateY(-2px);
+}
+
+/* Estilo de la tarjeta de Oferta Especial */
+.special-offer-card {
+    width: 80%;
+    margin: 20px auto;
+    padding: 30px;
+    background-color: black;
+    color: var(--primary-yellow);
+    border: 10px solid var(--primary-yellow);
+    box-shadow: 0 0 30px var(--primary-yellow);
+    text-align: center;
+    border-radius: var(--border-radius);
+    animation: neon-border 1.5s infinite alternate;
+}
+
+@keyframes neon-border {
+    from { border-color: var(--primary-yellow); box-shadow: 0 0 10px var(--primary-yellow), 0 0 20px var(--primary-yellow); }
+    to { border-color: red; box-shadow: 0 0 15px red, 0 0 25px red; }
+}
+
+
+/* --- 4. Ubicación --- */
+.location-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px 10px;
+    gap: 30px;
+}
+
+/* ESTILO DE LA CAJA DE LA TERMINAL (map-placeholder) */
+.map-placeholder {
+    width: 45%;
+    height: 350px;
+    background-color: #004d00; 
+    border: 5px solid black;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.8), inset 0 0 10px black; 
+    border-radius: 5px;
+    
+    display: flex; 
+    overflow: hidden;
+    
+    justify-content: center;
+    align-items: center;
+    padding: 0; 
+    
+    /* Por defecto, está oculto hasta que JS lo active */
+    display: none; 
+}
+
+/* Estilo de la imagen dentro del placeholder del mapa */
+.map-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0; 
+}
+
+.hours-info {
+    width: 45%;
+    background-color: var(--dark-bg);
+    color: white;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    text-align: left;
+}
+
+.hours-info ul {
+    list-style: square;
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.button-link {
+    display: inline-block;
+    background: var(--primary-yellow);
+    color: black;
+    text-decoration: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    border: 3px solid black;
+    border-radius: 5px;
+    transition: background 0.3s;
+    font-family: var(--pixel-font);
+}
+
+.button-link:hover {
+    background: red;
+    color: white;
+}
+
+
+/* --- 5. Contacto y Formulario --- */
+
+.contacto {
+    text-align: center;
+    font-size: 40px;
+    background-color: rgba(255, 255, 0, 0.712);
+    padding-bottom: 20px;
+    border-radius: var(--border-radius);
+    border: solid yellow;
+    margin: 40px 10px;
+}
+
+.contacto h1 {
+    margin: 30px auto;
+    border: solid black;
+    width: 400px;
+    padding: 5px 0;
+}
+
+.formulari {
+    margin: 30px 10px;
+    width: auto;
+    background-color: var(--form-bg);
+    border-radius: var(--border-radius);
+    border: solid red;
+    padding: 40px 0;
+}
+
+.box {
+    margin: 0 auto;
+    width: 50%;
+    text-align: left;
+}
+
+.formulari label {
+    color: white;
+    font-size: 30px;
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 3px;
+}
+
+.formulari input, .formulari textarea {
+    width: 100%;
+    padding: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    border: 1px solid #000;
+    border-radius: 10px;
+    box-sizing: border-box;
+    font-family: var(--pixel-font);
+}
+
+.formulari textarea {
+    resize: vertical;
+}
+
+.formulari button {
+    font-family: var(--pixel-font);
+    font-size: 20px;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    transition: font-size 0.5s, background-color 0.5s;
+}
+
+.formulari button:hover {
+    background-color: blue;
+    font-size: 25px;
+}
+
+/* --- 6. Footer --- */
+
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 30px 20px;
+    margin-top: 50px;
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-around; 
+    align-items: flex-start; 
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-wrap: wrap; 
+    gap: 20px;
+}
+
+/* Aplicamos flex-basis solo a los divs de contenido */
+.footer-content > div { 
+    flex-basis: 200px;
+    padding: 10px;
+    text-align: center;
+}
+
+/* Estilo para el LOGO PRINCIPAL del footer (80x80) */
+.footer-content > img:not(.social-icon) {
+    width: 80px; 
+    height: 80px; 
+    object-fit: contain; 
+    flex-shrink: 0;   
+    flex-grow: 0;     
+    margin: 10px;
+}
+
+/* Estilo para los enlaces de navegación */
+.footer-links h2 {
+    font-size: 20px;
+    margin: 5px 0;
+}
+
+.footer-links h2 a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-links h2 a:hover {
+    color: var(--primary-yellow);
+}
+
+/* Estilo para las Redes Sociales */
+.social-media p {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+/* Estilo para los ICONOS SOCIALES (30x30) */
+.social-media .social-icon { 
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin: 0 5px;
+    opacity: 0.8;
+    transition: transform 0.3s;
+}
+
+.social-media .social-icon:hover {
+    opacity: 1;
+    transform: scale(1.2);
+}
+
+/* Estilo para los Créditos */
+.credits {
+    flex-basis: 100%;
+    margin-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 15px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.credits p {
+    margin: 5px 0;
+}
+
+/* --- 7. Media Queries (REVISADAS) --- */
+
+@media (max-width: 1024px) {
+    .typewriter {
+        font-size: 70px;
+        width: 12ch;
+    }
+    .card-item {
+        width: 45%; 
+    }
+    .location-container {
+        flex-direction: column;
+    }
+    .map-placeholder, .hours-info {
+        width: 90%;
+    }
+    .box {
+        width: 70%;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .header {
+        height: auto;
+    }
+    .header nav {
+        flex-direction: column;
+        justify-content: center;
+    }
+    .header ul {
+        position: static;
+        transform: none;
+        margin-top: 10px;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .typewriter {
+        font-size: 50px;
+    }
+    .card-item {
+        width: 80%;
+        min-height: auto;
+    }
+    .formulari button {
+        width: 100%;
+    }
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .footer-content > div {
+        flex-basis: 100%;
+        margin-bottom: 15px;
+    }
+    .footer-content img {
+        margin-bottom: 15px;
+    }
+    .footer-links {
+        order: -1;
+    }
+    
+    /* Ajuste en móvil para la barra lateral (slide-out) */
+    #cart-sidebar {
+        width: 100%; 
+        z-index: 9999;
+    }
+}
+
+
+@media (max-width: 480px) {
+    .typewriter {
+        font-size: 35px;
+    }
+    .top h1,
+    .header2 h1,
+    .contacto h1 {
+        width: 90%;
+        font-size: 28px;
+    }
+    .card-item {
+        width: 95%;
+    }
+}

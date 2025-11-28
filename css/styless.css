@@ -1,0 +1,540 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+
+#body{
+    height:100%;
+    height: 100%;
+    overflow:hidden;
+    font-family: "Pixelify Sans", sans-serif;
+   
+}
+#bg-video{
+    position:fixed;
+    top:-44px;
+    left:0;
+    object-fit:cover;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    opacity:80%;
+}
+.header{
+    position:sticky;
+    transition: all 0.3s ease;
+    margin-top:-80px;
+    width:100%;
+    height:300px;
+    background-color:rgba(255, 255, 0, 0.829);
+    border-radius: 10px;
+    
+   
+}
+.header:hover{
+    opacity:90%;
+}
+
+.header img{
+    float:right;
+}
+
+
+
+.header ul{
+    width:400px;
+    padding:0;
+    margin:0;
+    list-style:none;
+    
+}
+
+.header li{
+    margin-top:10px;
+    width:90px;
+    line-height:40px;
+    float:left;
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-left:10px;
+    padding-right:10px;
+    text-align:center;
+    border-radius:5px;
+    border:5px solid black;
+}
+
+.header  li:hover{
+    color:white;
+    background-color:red;
+    width:100px;
+    border-radius:10px;
+}
+
+.header h1{
+    padding-top:100px;
+    text-align:center;
+    font-size:100px;
+    opacity:1;
+   
+}
+
+
+.top{
+    text-align:center;
+    margin-top:-0%;
+    margin-bottom:-5%;
+    font-size:40px;
+    background-color:#6ba733bb;
+    padding-bottom:20px;
+    border-radius: 10px;
+    border:solid green;
+}
+.top h1{
+    margin-left:39%;
+    border: solid black;
+    width: 400px;
+    
+}
+
+.top:hover{
+  background-color:hsla(91, 53%, 43%, 0.747);
+}
+
+.section{
+    margin-top:94px;
+    width:100%;
+    height:600px;
+    background-color:rgba(165, 42, 42, 0.774);
+    border-radius: 10px;
+    border:solid red;
+}
+.section:hover{
+    background-color:rgba(165, 42, 42, 0.877);
+}
+
+#hamburgesa1{
+    float:left;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#hamburgesa1 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#hamburgesa1 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#hamburgesa1:hover{
+    background-color: red;
+}
+#hamburgesa1:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#hamburgesa2{
+    float:left;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#hamburgesa2 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#hamburgesa2 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#hamburgesa2:hover{
+    background-color: red;
+}
+#hamburgesa2:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#hamburgesa3{
+    float:right;
+    margin-right:5%;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#hamburgesa3 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#hamburgesa3 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#hamburgesa3:hover{
+    background-color: red;
+}
+#hamburgesa3:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+.header2{
+    text-align:center;
+    margin-top:-0%;
+    margin-bottom:-5%;
+    font-size:40px;
+    background-color:#6ba733bb;
+    padding-bottom:20px;
+    border-radius: 10px;
+    border:solid green; 
+}
+
+.header2 h1{
+    margin-left:39%;
+    border: solid black;
+    width: 400px;
+    
+}
+
+.section2{
+    margin-top:94px;
+    width:100%;
+    height: 1200px;
+    background-color:rgba(165, 42, 42, 0.774);
+    border-radius: 10px;
+    border:solid red;
+}
+
+#carta1{
+    
+    float:left;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta1 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta1 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta1:hover{
+    background-color: red;
+}
+#carta1:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#carta2{
+    float:left;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta2 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta2 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta2:hover{
+    background-color: red;
+}
+#carta2:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#carta3{
+    float:right;
+    margin-right:5%;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta3 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta3 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta3:hover{
+    background-color: red;
+}
+#carta3:hover img{
+    width:350px;
+    height:350px;
+}
+
+#carta4{
+    margin-top:20px;
+    float:left;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta4 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta4 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta4:hover{
+    background-color: red;
+}
+#carta4:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#carta5{
+    float:left;
+    margin-top:20px;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta5 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta5 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta5:hover{
+    background-color: red;
+}
+#carta5:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+
+#carta6{
+    float:right;
+    margin-top:20px;
+    margin-right:5%;
+    margin-left:5%;
+    background-color:rgba(0, 0, 0, 0.699);
+    width:500px;
+    border-radius:10px;
+    text-align:center;
+    height:560px;
+}
+#carta6 img{
+    margin-top:-40px;
+    margin-left:10px;
+    border-radius:15px;
+    transition: width 1s, height 1s;
+}
+#carta6 h4{
+    margin-top:20px;
+    text-align:center;
+    font-size:50px;
+    text-decoration: underline;
+}
+#carta6:hover{
+    background-color: red;
+}
+#carta6:hover img{
+    width:350px;
+    height:350px;
+}
+
+
+.contacto{
+    text-align:center;
+    margin-top:-0%;
+    margin-bottom:-5%;
+    font-size:40px;
+    background-color:rgba(255, 255, 0, 0.712);
+    padding-bottom:20px;
+    border-radius: 10px;
+    border:solid yellow;
+}
+.contacto h1{
+    margin-left:39%;
+    border: solid black;
+    width: 400px;
+}
+
+.formulari{
+    margin-top:94px;
+    width:100%;
+    height: 1000px;
+    background-color:rgba(0, 0, 0, 0.767);
+    border-radius: 10px;
+    border:solid red;
+}
+
+.box{
+    margin-left:25%;
+    margin-top:10%;
+    width:50%;
+    height:40%;
+}
+.formulari label{
+    color:white;
+    font-size:3.5rem;
+    display: block;
+    margin-top:60px;
+    margin-bottom: 3px;
+    width:50px;
+   
+}
+.formulari label:hover{
+    text-decoration: underline;
+
+}
+.formulari input{
+   width: 100%;
+   padding: 10px;
+   font-weight: bold;
+   font-size:1rem;
+   box-sizing: border-box;
+   border: 1px solid #000;
+}
+
+.formulari button{
+    font-size: 1rem;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: #000;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+
+}
+
+.formulari button:hover{
+    background-color:blue;
+    font-size:20px;
+    transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+    .section img, .section2 img {
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px) {
+    .header ul {
+        flex-direction: column;
+    }
+
+    .section, .section2 {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .section div[id^="hamburgesa"], 
+    .section2 div[id^="carta"] {
+        width: 90%;
+    }
+
+    .formulari label {
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .header img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .section img, .section2 img {
+        width: 100%;
+    }
+
+    .formulari label {
+        font-size: 1rem;
+    }
+
+    .formulari input, .formulari button {
+        font-size: 0.9rem;
+    }
+}
