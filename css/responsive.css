@@ -4,7 +4,7 @@
 :root {
     --pixel-font: "Pixelify Sans", sans-serif;
     --primary-red: rgba(165, 42, 42, 0.774); 
-    --primary-yellow: rgba(255, 255, 0, 0.829);
+    --primary-yellow: rgb(255, 255, 0);
     --primary-green: #6ba733bb;
     --dark-bg: rgba(0, 0, 0, 0.699);
     --form-bg: rgba(0, 0, 0, 0.767);
@@ -37,7 +37,7 @@ body {
 
 /* --- 2. Header y Navegación --- */
 .header {
-    position: sticky;
+    /* position: sticky; */
     top: 0;
     transition: all 0.3s ease;
     width: 100%;
