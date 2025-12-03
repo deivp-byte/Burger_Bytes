@@ -9,6 +9,8 @@
     --dark-bg: rgba(0, 0, 0, 0.699);
     --form-bg: rgba(0, 0, 0, 0.767);
     --border-radius: 10px;
+    --shadow-depth: 4px; /* Variable para la profundidad del efecto 3D */
+    --card-height-base: 600px; /* Altura base de un artículo */
 }
 
 body {
@@ -18,6 +20,45 @@ body {
     margin: 0;
     padding: 0;
     color: black;
+}
+
+/* --- NUEVO: EFECTO SCANLINES (Líneas CRT) --- */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+    );
+    pointer-events: none; 
+    z-index: 9999; 
+}
+
+
+/* --- NUEVO: OVERLAY DE PÁGINA PARA BARRA LATERAL --- */
+#page-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+/* Activado por JavaScript al abrir la sidebar */
+body.sidebar-open #page-overlay {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* --- 1. Fondo y Efectos Generales --- */
@@ -37,7 +78,6 @@ body {
 
 /* --- 2. Header y Navegación --- */
 .header {
-    /* position: sticky; */
     top: 0;
     transition: all 0.3s ease;
     width: 100%;
@@ -80,6 +120,8 @@ body {
     border-radius: 5px;
     border: 5px solid black;
     transition: all 0.2s ease;
+    /* EFECTO 3D EN MENÚ */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
 .header li:hover {
@@ -87,6 +129,11 @@ body {
     background-color: red;
     border-radius: 10px;
     transform: scale(1.05);
+}
+
+.header li:active { /* Efecto presionado */
+    transform: translate(var(--shadow-depth), var(--shadow-depth));
+    box-shadow: none;
 }
 
 .header a {
@@ -148,11 +195,9 @@ body {
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
     z-index: 1000; 
     
-    /* Animación de deslizamiento */
     transform: translateX(100%);
     transition: transform 0.4s ease-out;
 
-    /* Estructura Flexbox */
     display: flex;
     flex-direction: column;
 }
@@ -269,6 +314,8 @@ body {
     width: 100%;
     transition: background-color 0.2s;
     margin-bottom: 8px;
+    /* EFECTO 3D EN BOTONES PRINCIPALES */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
 /* Estilo específico para Vaciar Carrito */
@@ -289,8 +336,10 @@ body {
     margin-bottom: 0;
 }
 
-.checkout-btn:hover {
-    background-color: red;
+/* ESTILOS PRESIONADOS PARA TODOS LOS BOTONES 3D */
+.clear-all-btn:active, .checkout-btn:active, .add-to-cart-btn:active, .button-link:active {
+    transform: translate(var(--shadow-depth), var(--shadow-depth));
+    box-shadow: none;
 }
 
 
@@ -318,11 +367,91 @@ body {
 
 /* --- 3. Contenido y Tarjetas (Cards) --- */
 
+/* Contenedor de TOP BYTES (Siempre visible) */
+.section { 
+    margin: 30px 10px;
+    width: auto;
+    background-color: var(--primary-red);
+    border-radius: var(--border-radius);
+    border: solid red;
+    padding: 20px 0;
+    
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 1.5%;
+}
+
+/* --- SOLUCIÓN CRUCIAL PARA EL ESPACIO EN BLANCO Y DESPLIEGUE SUAVE --- */
+
+/* Contenedor Flexbox de la CARTA COMPLETA (SECTION 2) */
+.section2 {
+    margin: 30px 10px;
+    width: auto;
+    background-color: var(--primary-red);
+    border-radius: var(--border-radius);
+    border: solid red;
+    padding: 20px 0;
+    
+    /* Propiedades Flexbox necesarias */
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 1.5%;
+    
+    /* CONTROL DE ALTURA INICIAL Y TRANSICIÓN */
+    /* Altura que colapsa el contenedor a la altura de 3 artículos visibles */
+    max-height: 1000px; /* Valor de fallback: JS calculará el valor exacto */
+    overflow: hidden; /* Oculta el contenido extra */
+    transition: max-height 0.8s ease-in-out; /* Animación de despliegue */
+}
+
+/* Clase que JS añade para mostrar todos los artículos */
+.section2.expanded {
+    max-height: 4000px; /* Suficientemente grande para mostrar todos los ítems */
+}
+
+/* Oculta los artículos para la transición */
+.card-hidden {
+    opacity: 0; 
+    display: none; /* JS lo oculta al inicio */
+    transition: opacity 0.4s ease-in; 
+}
+
+/* NUEVA CLASE: Hace visible el artículo individualmente (opacidad) */
+.card-hidden.is-visible {
+    opacity: 1;
+    display: flex; /* Restaura el display flex para la cuadrícula */
+}
+
+
+/* Estilos para el contenedor del botón (centrado) */
+.load-more-container {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 20px;
+    transition: opacity 0.4s;
+}
+
+/* Estilo para el botón "Ver Más" */
+#load-more-btn {
+    font-size: 22px; 
+    padding: 12px 25px;
+}
+
+/* Estilo y visibilidad del botón "Ver Menos" (SOLUCIÓN: quitamos display:none) */
+#hide-less-btn {
+    /* QUITAMOS display: none; para que JS lo controle */
+    margin-left: 10px; 
+    font-size: 22px; 
+    padding: 12px 25px;
+}
+
+
 .top, .header2 {
     text-align: center;
     font-size: 40px;
     background-color: var(--primary-green);
-    padding-bottom: 20px;
     border-radius: var(--border-radius);
     border: solid green;
     margin: 40px 10px;
@@ -337,21 +466,7 @@ body {
     display: inline-block;
 }
 
-.section, .section2 {
-    margin: 30px 10px;
-    width: auto;
-    background-color: var(--primary-red);
-    border-radius: var(--border-radius);
-    border: solid red;
-    padding: 20px 0;
-    
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 1.5%;
-}
-
-/* Estilo de Tarjeta de Producto (Articulo) */
+/* Estilo de Tarjeta de Producto (Articulo) - CON EFECTO DE VENTANA RETRO */
 .card-item {
     background-color: var(--dark-bg);
     width: 30%; 
@@ -366,8 +481,9 @@ body {
     flex-direction: column; 
     justify-content: space-between; 
     align-items: center; 
-    text-align: center; 
-    min-height: 550px;
+    min-height: var(--card-height-base);
+    /* EFECTO DE VENTANA */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
 .card-item h4, .card-item p {
@@ -400,6 +516,8 @@ body {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
+    /* EFECTO 3D EN BOTÓN DE AÑADIR */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
 .add-to-cart-btn:hover {
@@ -452,7 +570,6 @@ body {
     align-items: center;
     padding: 0; 
     
-    /* Por defecto, está oculto hasta que JS lo active */
     display: none; 
 }
 
@@ -480,6 +597,7 @@ body {
 }
 
 .button-link {
+    font-family: var(--pixel-font);
     display: inline-block;
     background: var(--primary-yellow);
     color: black;
@@ -489,7 +607,8 @@ body {
     border: 3px solid black;
     border-radius: 5px;
     transition: background 0.3s;
-    font-family: var(--pixel-font);
+    /* EFECTO 3D EN BOTÓN DE MAPA */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
 .button-link:hover {
@@ -566,7 +685,10 @@ body {
     color: #fff;
     cursor: pointer;
     transition: font-size 0.5s, background-color 0.5s;
+    /* EFECTO 3D EN BOTÓN DE ENVIAR */
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 blue;
 }
+
 
 .formulari button:hover {
     background-color: blue;
@@ -680,6 +802,11 @@ body {
     .box {
         width: 70%;
     }
+    
+    /* Ajuste de altura de la carta para el Ver Más en tablet */
+    .section2 {
+        max-height: calc(2 * var(--card-height-base) + 100px); 
+    }
 }
 
 
@@ -727,6 +854,11 @@ body {
     #cart-sidebar {
         width: 100%; 
         z-index: 9999;
+    }
+    
+    /* Ajuste de altura de la carta para el Ver Más en móvil */
+    .section2 {
+        max-height: calc(3 * var(--card-height-base) + 100px); 
     }
 }
 
