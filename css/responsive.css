@@ -428,12 +428,14 @@ body.sidebar-open #page-overlay {
 
 /* Clase que JS añade para expandir el contenedor */
 .section2.expanded {
-    max-height: 4000px !important; /* Valor alto para mostrar todo */
+    /* CORRECCIÓN CLAVE: Usamos un valor muy alto para que los artículos tengan espacio ilimitado al expandirse */
+    max-height: 9999px !important; 
 }
 
 /* Ocultación y transición individual de los ítems */
 .card-item.hidden-item {
     opacity: 0;
+    /* Mantenemos display: none. JS lo cambia a flex y añade 'is-visible' */
     display: none; 
     transition: opacity 0.3s ease-in; 
 }
@@ -557,7 +559,7 @@ body.sidebar-open #page-overlay {
     align-items: center;
     padding: 0; 
     
-    display: none; 
+    /* Mantenemos display: flex para que se vea siempre */
 }
 
 /* Estilo de la imagen dentro del placeholder del mapa */
@@ -582,7 +584,7 @@ body.sidebar-open #page-overlay {
     padding-left: 20px;
     line-height: 1.8;
 }
-
+/* MANTENEMOS ESTILOS DE .button-link para otros botones (Ver Más, etc.) */
 .button-link {
     font-family: var(--pixel-font);
     display: inline-block;
@@ -770,7 +772,7 @@ body.sidebar-open #page-overlay {
     margin: 5px 0;
 }
 
-/* --- 7. Media Queries (REVISADAS) --- */
+/* --- 7. Media Queries (AJUSTES PARA RESPONSIVE) --- */
 
 @media (max-width: 1024px) {
     .typewriter {
@@ -798,17 +800,28 @@ body.sidebar-open #page-overlay {
 
 
 @media (max-width: 768px) {
+    /* AJUSTES PARA EL HEADER EN MÓVIL */
     .header {
-        height: auto;
+        height: 500px; 
+    }
+    .header h1 {
+        font-size: 50px;
+        margin-top: 100px; 
     }
     .header ul {
-        /* Desanclamos el UL y lo hacemos flexible en móvil */
         position: static;
         transform: none;
-        margin-top: 10px;
+        margin-top: 20px; 
         flex-wrap: wrap;
         gap: 5px;
     }
+    
+    /* CAMBIO CLAVE PARA CARTA RESPONSIVE */
+    .section2.collapsed {
+        /* Calcule la altura para 3 filas (ya que solo se ve una tarjeta por fila en móvil) */
+        max-height: calc(3 * var(--card-height-base) + 100px); 
+    }
+    
     .typewriter {
         font-size: 50px;
     }
@@ -840,10 +853,6 @@ body.sidebar-open #page-overlay {
         z-index: 9999;
     }
     
-    /* Regla de colapso para móvil (3 filas visibles) */
-    .section2.collapsed {
-        max-height: calc(3 * var(--card-height-base) + 100px); 
-    }
 }
 
 
@@ -859,5 +868,9 @@ body.sidebar-open #page-overlay {
     }
     .card-item {
         width: 95%;
+    }
+    /* Ajustamos el padding del body en pantallas muy pequeñas si el navbar es más estrecho */
+    body {
+        padding-top: 100px;
     }
 }

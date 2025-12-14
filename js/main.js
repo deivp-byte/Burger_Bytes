@@ -22,10 +22,9 @@ const addButtons = document.querySelectorAll('.add-to-cart-btn');
 const totalItemsSpan = document.querySelectorAll('#cart-total-items'); 
 const sidebarFooter = document.querySelector('.sidebar-footer'); 
 const totalAmountSpan = document.getElementById('cart-total-amount'); 
-const mapToggleBtn = document.getElementById('toggle-map-btn');
-const mapPlaceholder = document.querySelector('.map-placeholder');
+const mapPlaceholder = document.querySelector('.map-placeholder'); // MANTENEMOS ESTA VARIABLE POR SI SE USA EN OTRO LADO
 const navLinks = document.querySelectorAll('.header ul li a'); 
-const navLogo = document.querySelector('.fixed-navbar img'); // NUEVO: Logo
+const navLogo = document.querySelector('.fixed-navbar img'); 
 
 // 2. Elementos para "Ver Más"
 const loadMoreBtn = document.getElementById('load-more-btn');
@@ -256,10 +255,6 @@ function setupNavLinks() {
             e.preventDefault();
             const targetId = this.getAttribute('href');
             smoothScroll(targetId);
-            
-            // Añade efecto visual a los enlaces UL (si es necesario, aunque ya tienen CSS)
-            // link.classList.add('clicked'); 
-            // setTimeout(() => link.classList.remove('clicked'), 200);
         });
     });
 }
@@ -282,16 +277,8 @@ function handleLogoClick(e) {
 }
 
 
-// LÓGICA: Alternar la vista del mapa/imagen (Se mantiene)
-function toggleMap() {
-    if (mapPlaceholder.style.display === 'none' || mapPlaceholder.style.display === '') {
-        mapPlaceholder.style.display = 'flex';
-        mapToggleBtn.textContent = 'Ocultar Mapa (Pixel Mode)';
-    } else {
-        mapPlaceholder.style.display = 'none';
-        mapToggleBtn.textContent = 'Ver en Mapa (Pixel Mode)';
-    }
-}
+// LÓGICA: Alternar la vista del mapa/imagen (FUNCIÓN ELIMINADA)
+
 
 // LÓGICA DE "VER MÁS ARTÍCULOS" (Se mantiene)
 function loadMoreItems() {
@@ -357,7 +344,6 @@ function setupListeners() {
     
     // Escuchadores de Navegación y Mapa
     setupNavLinks();
-    if (mapToggleBtn) mapToggleBtn.addEventListener('click', toggleMap);
     
     // NUEVO: Escuchador para el logo (Vuelve a Inicio)
     if (navLogo) navLogo.addEventListener('click', handleLogoClick);
