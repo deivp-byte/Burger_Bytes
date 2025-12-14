@@ -19,7 +19,38 @@ body {
     font-family: var(--pixel-font);
     margin: 0;
     padding: 0;
-    color: black;
+    background-color: beige; 
+} 
+/* IMPORTANTE: Ajustamos el padding superior para el navbar fijo (Logo 100px + padding) */
+body {
+    padding-top: 120px; 
+}
+
+/* --- BARRA DE NAVEGACIÓN FIJA (SOLO Logo y Carrito) --- */
+.fixed-navbar {
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; 
+    background-color: rgba(255, 255, 255, 0); 
+    padding: 10px 5%; 
+    box-sizing: border-box;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* EFECTO PULSADO PARA EL LOGO */
+.fixed-navbar img {
+    cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+.fixed-navbar img.clicked {
+    transform: scale(0.95);
+    opacity: 0.8;
 }
 
 /* --- NUEVO: EFECTO SCANLINES (Líneas CRT) --- */
@@ -49,7 +80,7 @@ body::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); 
+    background-color: rgba(0, 0, 0, 0.5); 
     z-index: 999; 
     visibility: hidden;
     opacity: 0;
@@ -61,56 +92,50 @@ body.sidebar-open #page-overlay {
     opacity: 1;
 }
 
-/* --- 1. Fondo y Efectos Generales --- */
+/* Video */
 #bg-video {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
+    position: absolute; 
+    top: 0;
+    left: 0;
+    width: 120%; 
+    height: 100%;
     object-fit: cover;
-    z-index: -1;
+    z-index: -1; 
     opacity: 0.8;
 }
 
-/* --- 2. Header y Navegación --- */
+/* --- Header y Navegación (RESTAURADA) --- */
 .header {
     top: 0;
     transition: all 0.3s ease;
     width: 100%;
-    height: 300px;
+    height: 950px; /* Mantenemos su altura de 950px */
     background-color: var(--primary-yellow);
-    border-radius: 0 0 var(--border-radius) var(--border-radius);
     z-index: 100;
     
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    justify-content: space-around; 
-    padding: 10px 0;
-}
-
-.header nav {
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: relative;
+    justify-content: space-around;
+    padding: 10px 0;
+    position: relative; 
+    overflow: hidden;
+    margin-top:-120px;
+}
+.header h1{
+    margin-top:-110px;
 }
 
 .header ul {
     list-style: none;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     gap: 15px;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
     position: absolute;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translateX(-50%); 
 }
 
 .header li {
@@ -118,9 +143,10 @@ body.sidebar-open #page-overlay {
     padding: 8px 10px;
     text-align: center;
     border-radius: 5px;
+    background-color:beige;
     border: 5px solid black;
     transition: all 0.2s ease;
-    /* EFECTO 3D EN MENÚ */
+
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
@@ -131,42 +157,51 @@ body.sidebar-open #page-overlay {
     transform: scale(1.05);
 }
 
-.header li:active { /* Efecto presionado */
-    transform: translate(var(--shadow-depth), var(--shadow-depth));
-    box-shadow: none;
-}
-
 .header a {
     text-decoration: none;
     color: black;
 }
 
-/* Efecto Typewriter */
+/* --- Efecto Typewriter (Horizontal con Cursor _) --- */
 .typewriter {
     --typewriter-steps: 12; 
     --typewriter-speed: 2s;
-
-    width: 12ch; 
+    margin-top:-50%; /* Mantenemos su margen negativo de -50% */
+    width: 0; 
+    max-width: 100%;
     overflow: hidden; 
-    white-space: nowrap;
+    white-space: nowrap; 
     text-align: center;
     font-size: 100px;
-    margin: 0;
-    border-right: 5px solid black; 
+    color: black ;
     
-    animation: typing var(--typewriter-speed) steps(var(--typewriter-steps), end),
-               blink-cursor 0.75s step-end infinite;
+    animation: typing var(--typewriter-speed) steps(var(--typewriter-steps), end) forwards;
 }
 
+/* CURSOR HORIZONTAL PARPADEANTE */
+.typewriter::after {
+    content: '_'; 
+    opacity: 0; 
+    
+    animation: 
+        blink-opacity 0.75s step-end infinite;
+        
+    animation-delay: var(--typewriter-speed);
+    animation-fill-mode: forwards; 
+}
+
+/* Keyframes */
 @keyframes typing {
     from { width: 0 }
     to { width: 12ch }
 }
 
-@keyframes blink-cursor {
-    from, to { border-color: transparent }
-    50% { border-color: black }
+@keyframes blink-opacity {
+    from, to { opacity: 0 }
+    50% { opacity: 1 }
 }
+/* --- Fin Typewriter --- */
+
 
 /* CARRITO: CONTADOR VISIBLE */
 .cart-icon {
@@ -177,6 +212,7 @@ body.sidebar-open #page-overlay {
     border-radius: 5px;
     transition: background 0.3s;
     cursor: pointer;
+    
 }
 
 .cart-icon:hover {
@@ -191,9 +227,9 @@ body.sidebar-open #page-overlay {
     right: 0;
     width: 350px;
     height: 100%;
-    background-color: #f0f0f0; 
+    background-color: #f0f0f0;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-    z-index: 1000; 
+    z-index: 1000;
     
     transform: translateX(100%);
     transition: transform 0.4s ease-out;
@@ -201,13 +237,9 @@ body.sidebar-open #page-overlay {
     display: flex;
     flex-direction: column;
 }
-
-/* Estado ABIERTO */
 #cart-sidebar.open {
     transform: translateX(0);
 }
-
-/* Encabezado */
 .sidebar-header {
     background-color: #333;
     color: white;
@@ -217,7 +249,6 @@ body.sidebar-open #page-overlay {
     align-items: center;
     flex-shrink: 0;
 }
-
 .sidebar-header h2 {
     margin: 0;
     font-size: 24px;
@@ -237,27 +268,23 @@ body.sidebar-open #page-overlay {
 .close-btn:hover {
     color: red;
 }
-
-/* Lista de Productos */
 .sidebar-list {
     list-style: none;
     padding: 10px 15px;
     margin: 0;
-    overflow-y: auto; 
-    flex-grow: 1; 
+    overflow-y: auto;
+    flex-grow: 1;
     color: #333;
 }
-
-/* Estilo de los ítems en el desplegable (CORREGIDO PARA ESPACIAMIENTO) */
 .sidebar-list li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0; 
-    border-bottom: 1px dashed #ccc; 
+    padding: 8px 0;
+    border-bottom: 1px dashed #ccc;
     line-height: 1.2;
     font-size: 16px;
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
 }
 
 .sidebar-list .empty-message {
@@ -284,12 +311,10 @@ body.sidebar-open #page-overlay {
 .remove-btn:hover {
     background: darkred;
 }
-
-/* Pie de Carrito (Total y Botones) */
 .sidebar-footer {
     display: flex;
     flex-direction: column;
-    align-items: flex-end; 
+    align-items: flex-end;
     padding: 15px;
     background-color: white;
     border-top: 2px solid #ccc;
@@ -317,18 +342,14 @@ body.sidebar-open #page-overlay {
     /* EFECTO 3D EN BOTONES PRINCIPALES */
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
-
-/* Estilo específico para Vaciar Carrito */
 .clear-all-btn {
-    background-color: #f44336; 
+    background-color: #f44336;
     color: white;
 }
 
 .clear-all-btn:hover {
     background-color: darkred;
 }
-
-/* Ajuste del botón de pago */
 .checkout-btn {
     background-color: var(--primary-red);
     color: white;
@@ -345,7 +366,6 @@ body.sidebar-open #page-overlay {
 
 /* --- Efectos JS --- */
 
-/* 1. Animación de rebote para el carrito */
 @keyframes cartBounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
@@ -353,7 +373,7 @@ body.sidebar-open #page-overlay {
 
 .cart-icon.bounce {
     animation: cartBounce 0.5s ease;
-    background-color: #33d02b; 
+    background-color: #33d02b;
 }
 
 /* 2. Efecto de "pulsado" en el botón */
@@ -367,61 +387,59 @@ body.sidebar-open #page-overlay {
 
 /* --- 3. Contenido y Tarjetas (Cards) --- */
 
-/* Contenedor de TOP BYTES (Siempre visible) */
-.section { 
-    margin: 30px 10px;
+/* ESTILOS DE FONDOS DE TÍTULOS */
+.top, .header2 {
+    text-align: center;
+    font-size: 40px; 
+    padding-bottom: 20px;
+    margin: 40px 10px;
+}
+
+.top h1, .header2 h1 {
+    margin: 0 auto;
     width: auto;
-    background-color: var(--primary-red);
-    border-radius: var(--border-radius);
-    border: solid red;
+    max-width: 90%;
+    padding: 5px 15px;
+    display: inline-block;
+}
+
+.top h4, p{
+    font-size: 18px;
+    text-align:left;
+}
+
+.section, .section2 {
+    margin: 20px 10px;
+    width: auto;
     padding: 20px 0;
-    
     display: flex; 
     flex-wrap: wrap; 
     justify-content: center; 
     gap: 1.5%;
 }
 
-/* --- SOLUCIÓN CRUCIAL PARA EL ESPACIO EN BLANCO Y DESPLIEGUE SUAVE --- */
+/* --- REGLAS DE COLAPSO DE CARTA (APLICADAS POR JS EN .section2) --- */
 
-/* Contenedor Flexbox de la CARTA COMPLETA (SECTION 2) */
-.section2 {
-    margin: 30px 10px;
-    width: auto;
-    background-color: var(--primary-red);
-    border-radius: var(--border-radius);
-    border: solid red;
-    padding: 20px 0;
-    
-    /* Propiedades Flexbox necesarias */
-    display: flex; 
-    flex-wrap: wrap; 
-    justify-content: center; 
-    gap: 1.5%;
-    
-    /* CONTROL DE ALTURA INICIAL Y TRANSICIÓN */
-    /* Altura que colapsa el contenedor a la altura de 3 artículos visibles */
-    max-height: 1000px; /* Valor de fallback: JS calculará el valor exacto */
-    overflow: hidden; /* Oculta el contenido extra */
-    transition: max-height 0.8s ease-in-out; /* Animación de despliegue */
+/* Clase base que JS usará para controlar la altura inicial */
+.section2.collapsed {
+    overflow: hidden; 
+    transition: max-height 0.8s ease-in-out; 
 }
 
-/* Clase que JS añade para mostrar todos los artículos */
+/* Clase que JS añade para expandir el contenedor */
 .section2.expanded {
-    max-height: 4000px; /* Suficientemente grande para mostrar todos los ítems */
+    max-height: 4000px !important; /* Valor alto para mostrar todo */
 }
 
-/* Oculta los artículos para la transición */
-.card-hidden {
-    opacity: 0; 
-    display: none; /* JS lo oculta al inicio */
-    transition: opacity 0.4s ease-in; 
+/* Ocultación y transición individual de los ítems */
+.card-item.hidden-item {
+    opacity: 0;
+    display: none; 
+    transition: opacity 0.3s ease-in; 
 }
-
-/* NUEVA CLASE: Hace visible el artículo individualmente (opacidad) */
-.card-hidden.is-visible {
+.card-item.hidden-item.is-visible {
     opacity: 1;
-    display: flex; /* Restaura el display flex para la cuadrícula */
+    display: flex;
 }
 
 
@@ -431,75 +449,42 @@ body.sidebar-open #page-overlay {
     margin-top: 40px;
     margin-bottom: 20px;
     transition: opacity 0.4s;
+    width: 100%; 
 }
 
-/* Estilo para el botón "Ver Más" */
-#load-more-btn {
+/* Estilo para los botones Ver Más/Menos (Centrado y Estilo) */
+#load-more-btn, #hide-less-btn {
     font-size: 22px; 
     padding: 12px 25px;
-}
-
-/* Estilo y visibilidad del botón "Ver Menos" (SOLUCIÓN: quitamos display:none) */
-#hide-less-btn {
-    /* QUITAMOS display: none; para que JS lo controle */
+    display: inline-block; 
     margin-left: 10px; 
-    font-size: 22px; 
-    padding: 12px 25px;
 }
 
-
-.top, .header2 {
-    text-align: center;
-    font-size: 40px;
-    background-color: var(--primary-green);
-    border-radius: var(--border-radius);
-    border: solid green;
-    margin: 40px 10px;
-}
-
-.top h1, .header2 h1 {
-    margin: 0 auto;
-    border: solid black;
-    width: auto;
-    max-width: 90%;
-    padding: 5px 15px;
-    display: inline-block;
-}
-
-/* Estilo de Tarjeta de Producto (Articulo) - CON EFECTO DE VENTANA RETRO */
+/* Estilo de Tarjeta de Producto (Articulo) */
 .card-item {
-    background-color: var(--dark-bg);
-    width: 30%; 
-    border-radius: var(--border-radius);
-    color: white;
+    width: 30%;
+    color: rgb(0, 0, 0);
     padding: 20px 10px;
     margin-bottom: 20px;
     box-sizing: border-box;
     transition: background-color 0.3s ease;
-    
     display: flex;
-    flex-direction: column; 
-    justify-content: space-between; 
-    align-items: center; 
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     min-height: var(--card-height-base);
-    /* EFECTO DE VENTANA */
-    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
-
+.card-item h4 {
+    margin-bottom:-2px;
+}
 .card-item h4, .card-item p {
-    width: 90%; 
+    width: 60%;
 }
-
 .card-item img {
     margin: 10px 0;
     border-radius: 15px;
-    transition: transform 1s ease, box-shadow 1s ease; 
+    transition: transform 1s ease, box-shadow 1s ease;
 }
-
-.card-item:hover {
-    background-color: red;
-}
-
 .card-item:hover img {
     transform: scale(1.1);
     box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.7);
@@ -518,6 +503,8 @@ body.sidebar-open #page-overlay {
     transition: background 0.3s, transform 0.2s;
     /* EFECTO 3D EN BOTÓN DE AÑADIR */
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
+    position: relative;
+    z-index: 10;
 }
 
 .add-to-cart-btn:hover {
@@ -803,8 +790,8 @@ body.sidebar-open #page-overlay {
         width: 70%;
     }
     
-    /* Ajuste de altura de la carta para el Ver Más en tablet */
-    .section2 {
+    /* Regla de colapso para tablet (2 filas visibles) */
+    .section2.collapsed {
         max-height: calc(2 * var(--card-height-base) + 100px); 
     }
 }
@@ -814,11 +801,8 @@ body.sidebar-open #page-overlay {
     .header {
         height: auto;
     }
-    .header nav {
-        flex-direction: column;
-        justify-content: center;
-    }
     .header ul {
+        /* Desanclamos el UL y lo hacemos flexible en móvil */
         position: static;
         transform: none;
         margin-top: 10px;
@@ -856,8 +840,8 @@ body.sidebar-open #page-overlay {
         z-index: 9999;
     }
     
-    /* Ajuste de altura de la carta para el Ver Más en móvil */
-    .section2 {
+    /* Regla de colapso para móvil (3 filas visibles) */
+    .section2.collapsed {
         max-height: calc(3 * var(--card-height-base) + 100px); 
     }
 }
