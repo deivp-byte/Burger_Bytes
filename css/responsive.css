@@ -5,12 +5,18 @@
     --pixel-font: "Pixelify Sans", sans-serif;
     --primary-red: rgba(165, 42, 42, 0.774); 
     --primary-yellow: rgb(255, 255, 0);
-    --primary-green: #6ba733bb;
+    --primary-green: #6ba733bb; /* Verde genérico */
     --dark-bg: rgba(0, 0, 0, 0.699);
     --form-bg: rgba(0, 0, 0, 0.767);
     --border-radius: 10px;
-    --shadow-depth: 4px; /* Variable para la profundidad del efecto 3D */
-    --card-height-base: 600px; /* Altura base de un artículo */
+    --shadow-depth: 4px; 
+    --card-height-base: 600px; 
+    
+    /* Variables de Paleta Pip-Boy de Fallout */
+    --pipboy-green-fallout: #80FF80; /* Verde Brillante (Luz de texto) */
+    --pipboy-bg-fallout: #1E371E; /* Verde Oscuro (Pantalla inactiva) */
+    --pipboy-metal: #6e6e6e; /* Gris/Verde desgastado para la carcasa */
+    --pipboy-dark-metal: #3d3d3d; /* Metal oscuro */
 }
 
 body {
@@ -109,7 +115,7 @@ body.sidebar-open #page-overlay {
     top: 0;
     transition: all 0.3s ease;
     width: 100%;
-    height: 950px; /* Mantenemos su altura de 950px */
+    height: 950px; 
     background-color: var(--primary-yellow);
     z-index: 100;
     
@@ -166,7 +172,7 @@ body.sidebar-open #page-overlay {
 .typewriter {
     --typewriter-steps: 12; 
     --typewriter-speed: 2s;
-    margin-top:-50%; /* Mantenemos su margen negativo de -50% */
+    margin-top:-50%; 
     width: 0; 
     max-width: 100%;
     overflow: hidden; 
@@ -303,7 +309,6 @@ body.sidebar-open #page-overlay {
     cursor: pointer;
     border-radius: 3px;
     font-size: 14px;
-    transition: background 0.2s;
     flex-shrink: 0;
     margin-left: 10px;
 }
@@ -358,7 +363,7 @@ body.sidebar-open #page-overlay {
 }
 
 /* ESTILOS PRESIONADOS PARA TODOS LOS BOTONES 3D */
-.clear-all-btn:active, .checkout-btn:active, .add-to-cart-btn:active, .button-link:active {
+.clear-all-btn:active, .checkout-btn:active, .add-to-cart-btn:active, .button-link:active, .pipboy-button:active {
     transform: translate(var(--shadow-depth), var(--shadow-depth));
     box-shadow: none;
 }
@@ -428,14 +433,13 @@ body.sidebar-open #page-overlay {
 
 /* Clase que JS añade para expandir el contenedor */
 .section2.expanded {
-    /* CORRECCIÓN CLAVE: Usamos un valor muy alto para que los artículos tengan espacio ilimitado al expandirse */
+    /* max-height para evitar que los artículos se salgan */
     max-height: 9999px !important; 
 }
 
 /* Ocultación y transición individual de los ítems */
 .card-item.hidden-item {
     opacity: 0;
-    /* Mantenemos display: none. JS lo cambia a flex y añade 'is-visible' */
     display: none; 
     transition: opacity 0.3s ease-in; 
 }
@@ -558,8 +562,6 @@ body.sidebar-open #page-overlay {
     justify-content: center;
     align-items: center;
     padding: 0; 
-    
-    /* Mantenemos display: flex para que se vea siempre */
 }
 
 /* Estilo de la imagen dentro del placeholder del mapa */
@@ -606,83 +608,189 @@ body.sidebar-open #page-overlay {
 }
 
 
-/* --- 5. Contacto y Formulario --- */
+/* --- 5. Contacto y Formulario (REDESIGN PIP-BOY - CSS PURO) --- */
 
-.contacto {
+/* Contenedor Principal de la Sección de Contacto */
+.pipboy-section {
     text-align: center;
     font-size: 40px;
-    background-color: rgba(255, 255, 0, 0.712);
+    background-color: beige; /* FONDO BEIGE RESTAURADO */
     padding-bottom: 20px;
     border-radius: var(--border-radius);
-    border: solid yellow;
+    border: solid black;
     margin: 40px 10px;
+    color: var(--pipboy-green-fallout); 
 }
 
-.contacto h1 {
+.pipboy-section h1 {
     margin: 30px auto;
-    border: solid black;
+    border: solid var(--pipboy-green-fallout);
     width: 400px;
     padding: 5px 0;
+    /* Efecto Neón Suave en el título de la sección */
+    box-shadow: 0 0 10px var(--pipboy-green-fallout);
+    color: black; /* Cambiamos el color del texto del h1 a negro para que destaque en el beige */
 }
 
-.formulari {
-    margin: 30px 10px;
-    width: auto;
-    background-color: var(--form-bg);
-    border-radius: var(--border-radius);
-    border: solid red;
-    padding: 40px 0;
+/* --- ESTILOS DEL MONITOR/PANTALLA PIP-BOY (CSS PURO) --- */
+
+.pipboy-screen-container {
+    width: 80%;
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 30px 10px 30px 10px; /* Padding para simular el marco de la carcasa */
+    background-color: var(--pipboy-metal); /* Fondo metálico */
+    border-radius: 15px;
+    position: relative; 
+    
+    /* Simulación de Carcasa 3D */
+    box-shadow: 
+        0 0 20px rgba(0, 0, 0, 0.5), /* Sombra exterior */
+        inset 0 0 15px var(--pipboy-dark-metal); /* Sombra interior */
 }
 
-.box {
+/* Contenedor Flex para la disposición del Formulario + Terminal */
+.pipboy-flex-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px;
+}
+
+/* Ocultamos los textos que se reemplazan por la imagen de fondo */
+.pipboy-header, .pipboy-footer {
+    display: none;
+}
+
+/* 1. Estilos del Formulario (Pantalla Principal) */
+.formulari.pipboy-content.form-area {
+    /* La pantalla interior */
+    width: 60%;
+    height: auto;
+    padding: 20px;
     margin: 0 auto;
-    width: 50%;
-    text-align: left;
+    position: static;
+    
+    background-color: var(--pipboy-bg-fallout); /* Fondo de la pantalla CRT */
+    border: 5px solid var(--pipboy-dark-metal); /* Marco interior de la pantalla */
+    border-radius: 5px;
+    box-shadow: 
+        0 0 10px rgba(128, 255, 128, 0.4), /* Brillo sutil */
+        inset 0 0 15px rgba(0, 0, 0, 0.9); /* Profundidad de la pantalla */
 }
 
-.formulari label {
-    color: white;
-    font-size: 30px;
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 3px;
-}
-
-.formulari input, .formulari textarea {
-    width: 100%;
-    padding: 10px;
-    font-weight: bold;
+.pipboy-content p {
     font-size: 18px;
-    border: 1px solid #000;
-    border-radius: 10px;
-    box-sizing: border-box;
+    margin-left: 0;
+    text-align: left;
+    color: var(--pipboy-green-fallout);
+    text-shadow: 0 0 5px var(--pipboy-green-fallout);
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--pipboy-green-fallout);
+}
+
+.pipboy-form {
+    width: 95%;
+    margin: 0 auto; 
+}
+
+.pipboy-form label {
+    font-size: 18px;
+    color: var(--pipboy-green-fallout);
+    margin-top: 15px;
+    display: block;
+    text-shadow: 0 0 3px var(--pipboy-green-fallout);
+}
+
+/* Estilo para los Inputs (Líneas de Comando) */
+.pipboy-input {
     font-family: var(--pixel-font);
+    background: transparent;
+    color: var(--pipboy-green-fallout); 
+    border: none;
+    border-bottom: 2px solid var(--pipboy-green-fallout);
+    padding: 5px 0;
+    width: 100%;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+    text-shadow: 0 0 5px var(--pipboy-green-fallout);
 }
 
-.formulari textarea {
-    resize: vertical;
+.pipboy-input:focus {
+    border-bottom: 2px solid var(--pipboy-green-fallout);
+    box-shadow: 0 0 8px var(--pipboy-green-fallout); 
 }
 
-.formulari button {
+.pipboy-textarea {
+    resize: none;
+    height: 100px;
+    border: 2px solid var(--pipboy-green-fallout);
+    padding: 10px;
+    background-color: var(--pipboy-bg-fallout); 
+    border-radius: 0;
+}
+
+/* Botón de Envío (Terminal) */
+.pipboy-button {
     font-family: var(--pixel-font);
     font-size: 20px;
-    margin-top: 20px;
+    margin-top: 30px;
     padding: 10px 20px;
-    border: none;
-    border-radius: 10px;
-    background: #000;
-    color: #fff;
+    border: 3px solid var(--pipboy-green-fallout);
+    border-radius: 5px;
+    background: transparent;
+    color: var(--pipboy-green-fallout);
     cursor: pointer;
-    transition: font-size 0.5s, background-color 0.5s;
-    /* EFECTO 3D EN BOTÓN DE ENVIAR */
-    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 blue;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 var(--pipboy-green-fallout);
+}
+
+.pipboy-button:hover {
+    background-color: var(--pipboy-green-fallout);
+    color: black;
+    box-shadow: 0 0 15px var(--pipboy-green-fallout);
 }
 
 
-.formulari button:hover {
-    background-color: blue;
-    font-size: 25px;
+/* 2. Estilos de la Terminal de Retroalimentación Derecha */
+
+.pipboy-terminal-carcasa {
+    width: 40%;
+    /* Ajustamos la altura para que no sea un valor fijo tan alto como 900px */
+    height: 400px; 
+    padding: 15px;
+    background-color: var(--pipboy-metal); 
+    border-radius: 10px;
+    
+    box-shadow: 
+        var(--shadow-depth) var(--shadow-depth) 0 0 var(--pipboy-dark-metal),
+        inset 0 0 10px var(--pipboy-dark-metal);
 }
+
+.pipboy-terminal-screen {
+    width: 100%;
+    height: 100%;
+    background-color: var(--pipboy-bg-fallout);
+    border: 3px solid var(--pipboy-dark-metal);
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto; /* Permite desplazamiento si hay muchos mensajes */
+}
+
+/* Estilo para el texto de la terminal */
+#feedback-terminal {
+    white-space: pre-wrap; /* Respeta saltos de línea */
+    color: var(--pipboy-green-fallout);
+    font-family: monospace;
+    font-size: 16px;
+    text-shadow: 0 0 4px var(--pipboy-green-fallout);
+    margin: 0;
+}
+
 
 /* --- 6. Footer --- */
 
@@ -796,6 +904,25 @@ body.sidebar-open #page-overlay {
     .section2.collapsed {
         max-height: calc(2 * var(--card-height-base) + 100px); 
     }
+    
+    .pipboy-screen-container {
+        width: 90%;
+        padding: 20px 10px; 
+    }
+    
+    .pipboy-flex-content {
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+    }
+    .formulari.pipboy-content.form-area {
+        width: 100%; 
+        padding: 15px;
+    }
+    .pipboy-terminal-carcasa {
+        width: 100%;
+        height: 300px;
+    }
 }
 
 
@@ -818,7 +945,6 @@ body.sidebar-open #page-overlay {
     
     /* CAMBIO CLAVE PARA CARTA RESPONSIVE */
     .section2.collapsed {
-        /* Calcule la altura para 3 filas (ya que solo se ve una tarjeta por fila en móvil) */
         max-height: calc(3 * var(--card-height-base) + 100px); 
     }
     
@@ -852,6 +978,29 @@ body.sidebar-open #page-overlay {
         width: 100%; 
         z-index: 9999;
     }
+
+    .pipboy-section h1 {
+        width: 95%;
+        font-size: 30px;
+    }
+    
+    .pipboy-screen-container {
+        width: 95%;
+    }
+
+    .formulari.pipboy-content.form-area {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .pipboy-terminal-carcasa {
+        height: 250px;
+    }
+    
+    .pipboy-form label {
+        font-size: 16px;
+        margin-top: 10px;
+    }
     
 }
 
@@ -869,8 +1018,16 @@ body.sidebar-open #page-overlay {
     .card-item {
         width: 95%;
     }
-    /* Ajustamos el padding del body en pantallas muy pequeñas si el navbar es más estrecho */
+    
     body {
         padding-top: 100px;
+    }
+
+    .pipboy-section h1 {
+        width: 100%;
+    }
+    
+    .pipboy-form {
+        width: 100%;
     }
 }

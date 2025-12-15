@@ -188,34 +188,49 @@
                     </ul>
                     <p>📍 Dirección: Calle Pixel Art, 1980, Vic, España</p>
                     
-                    </div>
+                </div>
             </div>
         </section>
 
 
-        <section class="contacto" id="contacto-section">
+        <section id="contacto-section" class="pipboy-section">
             <h1>Contacto | ¡Get a Byte!</h1>
-        
-            <div class="formulari">
-                <form action="#" method="POST" class="box">
-                    <label for="email">Email*</label>
-                    <input type="email" id="email" name="email" placeholder="steve@gmail.com" required>
+            
+            <div class="pipboy-screen-container">
+                
+                <div class="pipboy-flex-content"> 
 
-                    <label for="asunto">Asunto</label>
-                    <input type="text" id="asunto" name="asunto" placeholder="...">
+                    <div class="formulari pipboy-content form-area">
+                        <p>// INGRESO DE DATOS</p>
+                        <form action="#" method="POST" class="box pipboy-form" id="pipboy-form">
+                            
+                            <label for="email">E-mail de Acceso:*</label>
+                            <input type="email" id="email" name="email" placeholder="STEVE@GMAIL.COM" required class="pipboy-input">
 
-                    <label for="mensaje">Mensaje</label>
-                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="....."></textarea> 
+                            <label for="asunto">Asunto de la Consulta:</label>
+                            <input type="text" id="asunto" name="asunto" placeholder="URGENTE" class="pipboy-input">
 
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="Ej: 600 123 456"> 
+                            <label for="mensaje">Mensaje:</label>
+                            <textarea id="mensaje" name="mensaje" rows="5" placeholder="INSERTE DATOS..." class="pipboy-input pipboy-textarea"></textarea> 
 
-                    <button type="submit">Enviar</button>
-                </form>
+                            <label for="telefono">Teléfono de Retorno:</label>
+                            <input type="tel" id="telefono" name="telefono" placeholder="EJ: 600 123 456" class="pipboy-input"> 
+
+                            <button type="submit" class="pipboy-button">>> ENVIAR COMANDO</button>
+                        </form>
+                    </div>
+
+                    <div class="pipboy-terminal-carcasa">
+                        <div class="pipboy-terminal-screen">
+                            <pre id="feedback-terminal"></pre>
+                        </div>
+                    </div>
+
+                </div>
+                
             </div>
         </section>
-        
-    </main>
+        </main>
     
     <footer class="footer">
         <div class="footer-content">

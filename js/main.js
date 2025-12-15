@@ -22,9 +22,23 @@ const addButtons = document.querySelectorAll('.add-to-cart-btn');
 const totalItemsSpan = document.querySelectorAll('#cart-total-items'); 
 const sidebarFooter = document.querySelector('.sidebar-footer'); 
 const totalAmountSpan = document.getElementById('cart-total-amount'); 
-const mapPlaceholder = document.querySelector('.map-placeholder'); // MANTENEMOS ESTA VARIABLE POR SI SE USA EN OTRO LADO
+const mapPlaceholder = document.querySelector('.map-placeholder'); 
 const navLinks = document.querySelectorAll('.header ul li a'); 
 const navLogo = document.querySelector('.fixed-navbar img'); 
+
+// NUEVOS ELEMENTOS DE TERMINAL
+const formInputs = document.querySelectorAll('#pipboy-form .pipboy-input');
+const feedbackTerminal = document.getElementById('feedback-terminal');
+const pipboyForm = document.getElementById('pipboy-form'); // Capturamos el formulario
+
+// Mapeo de mensajes para la terminal
+const validationMessages = {
+    'email': { pass: 'EMAIL OK. INICIANDO CONEXIÓN.', fail: 'ERROR: FORMATO EMAIL INVÁLIDO.' },
+    'asunto': { pass: 'ASUNTO RECIBIDO. CONTINÚE.', fail: 'ERROR: ASUNTO DEMASIADO CORTO.' },
+    'mensaje': { pass: 'MENSAJE ACEPTADO. ESPERANDO TELEFONO.', fail: 'ERROR: MENSAJE REQUERIDO.' },
+    'telefono': { pass: 'VALIDACIÓN TELEFÓNICA COMPLETADA.', fail: 'ERROR: TELÉFONO INVÁLIDO O VACÍO.' }
+};
+
 
 // 2. Elementos para "Ver Más"
 const loadMoreBtn = document.getElementById('load-more-btn');
@@ -259,7 +273,7 @@ function setupNavLinks() {
     });
 }
 
-// NUEVA FUNCIÓN: Manejar el clic del Logo para ir a Inicio
+// FUNCIÓN: Manejar el clic del Logo para ir a Inicio
 function handleLogoClick(e) {
     e.preventDefault(); 
     const logo = e.target;
@@ -275,9 +289,6 @@ function handleLogoClick(e) {
         logo.classList.remove('clicked');
     }, 200); 
 }
-
-
-// LÓGICA: Alternar la vista del mapa/imagen (FUNCIÓN ELIMINADA)
 
 
 // LÓGICA DE "VER MÁS ARTÍCULOS" (Se mantiene)
@@ -335,6 +346,129 @@ function hideLessItems() {
 }
 
 
+// --- EFECTO MÁQUINA DE ESCRIBIR PARA LA TERMINAL ---
+function typewriterEffect(element, text) {
+    let i = 0;
+    // Agregamos un salto de línea antes de la nueva entrada, si no está vacío
+    if (element.textContent.trim() !== '') {
+        element.textContent += '\n'; 
+    }
+    const startIndex = element.textContent.length;
+    element.scrollTop = element.scrollHeight; 
+    
+    const speed = 25; // Velocidad de escritura
+    
+    function type() {
+        if (i < text.length) {
+            // Aseguramos que solo se añada el texto, manteniendo el contenido anterior
+            element.textContent += text.charAt(i);
+            i++;
+            element.scrollTop = element.scrollHeight; 
+            setTimeout(type, speed);
+        } else {
+            // Añadir el prompt de '>' después de que termine de escribir
+            element.textContent += '\n\n>';
+            element.scrollTop = element.scrollHeight;
+        }
+    }
+    type();
+}
+
+// --- LÓGICA DE VALIDACIÓN DE CAMPOS ---
+function validateField(input) {
+    const name = input.name;
+    const value = input.value.trim();
+    let message = '';
+    let isValid = true;
+    
+    if (name === 'email') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        isValid = emailRegex.test(value);
+    } else if (name === 'asunto') {
+        isValid = value.length >= 3;
+    } else if (name === 'mensaje') {
+        isValid = value.length > 0;
+    } else if (name === 'telefono') {
+        const phoneRegex = /^\s*(?:\+?(\d{1,3}))?([-(]?(\d{3})[)-]?)?([ -]?(\d{4}))([ -]?(\d{4}))\s*$/;
+        isValid = phoneRegex.test(value);
+    }
+    
+    if (input.required && value === '') {
+        isValid = false;
+        message = 'ERROR: CAMPO REQUERIDO VACÍO.';
+    } else if (isValid) {
+        message = validationMessages[name].pass;
+    } else {
+        message = validationMessages[name].fail;
+    }
+    
+    // Almacenar el estado de validación en el elemento input
+    input.setAttribute('data-valid', isValid);
+    
+    typewriterEffect(feedbackTerminal, `>${name.toUpperCase()} STATUS:\n${message}`);
+    return isValid;
+}
+
+
+// --- NUEVA FUNCIÓN: MANEJAR EL ENVÍO DEL FORMULARIO ---
+function handleFormSubmit(e) {
+    e.preventDefault(); // Detiene la recarga de la página
+
+    let allFieldsValid = true;
+    let requiredFieldsMissing = false;
+
+    // 1. Recorre todos los inputs para forzar la validación final y verificar el estado
+    formInputs.forEach(input => {
+        // Ejecuta la validación de campo (esto también actualiza el atributo data-valid)
+        const isValid = validateField(input);
+        
+        if (!isValid) {
+            allFieldsValid = false;
+            // Si es requerido y está vacío, es un error más grave
+            if (input.required && input.value.trim() === '') {
+                requiredFieldsMissing = true;
+            }
+        }
+    });
+
+    // 2. Reporta el resultado en la terminal
+    if (allFieldsValid) {
+        typewriterEffect(feedbackTerminal, 
+            'VALIDACIÓN COMPLETA. TODOS LOS CAMPOS CORRECTOS.\n' + 
+            'MENSAJE ENVIADO A LA BASE. ESPERE RESPUESTA.');
+        
+        // Opcional: limpiar el formulario después de un envío exitoso ficticio
+        pipboyForm.reset(); 
+
+    } else if (requiredFieldsMissing) {
+         typewriterEffect(feedbackTerminal, 
+            'FALLO DE ENVÍO: CAMPOS REQUERIDOS INCOMPLETOS O INVÁLIDOS.\n' + 
+            'VERIFIQUE LA INFORMACIÓN E INTENTE DE NUEVO.');
+    } else {
+        typewriterEffect(feedbackTerminal, 
+            'FALLO DE ENVÍO: ALGUNOS DATOS SON INVÁLIDOS.\n' + 
+            'AJUSTE LOS PARÁMETROS Y VUELVA A INTENTAR.');
+    }
+}
+
+
+// --- ESCUCHADORES DE LA TERMINAL ---
+function setupTerminalListeners() {
+    // 1. Escuchadores de validación al perder el foco (blur)
+    formInputs.forEach(input => {
+        input.addEventListener('blur', () => validateField(input));
+    });
+    
+    // 2. NUEVO: Escuchador para el evento de ENVÍO
+    if (pipboyForm) {
+        pipboyForm.addEventListener('submit', handleFormSubmit);
+    }
+    
+    // Mensaje inicial de la terminal
+    typewriterEffect(feedbackTerminal, 'BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...');
+}
+
+
 // --- Event Listeners y Configuración Inicial ---
 
 function setupListeners() {
@@ -342,15 +476,18 @@ function setupListeners() {
     setupCartListeners();
     setupAddButtons(); 
     
-    // Escuchadores de Navegación y Mapa
+    // Escuchadores de Navegación
     setupNavLinks();
     
-    // NUEVO: Escuchador para el logo (Vuelve a Inicio)
+    // Escuchador para el logo (Vuelve a Inicio)
     if (navLogo) navLogo.addEventListener('click', handleLogoClick);
 
     // Escuchadores de la Carta (Ver Más/Menos)
     if (loadMoreBtn) loadMoreBtn.addEventListener('click', loadMoreItems);
     if (hideLessBtn) hideLessBtn.addEventListener('click', hideLessItems);
+    
+    // Escuchadores de la Terminal
+    setupTerminalListeners();
 }
 
 
