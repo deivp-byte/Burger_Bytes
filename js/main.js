@@ -29,14 +29,17 @@ const navLogo = document.querySelector('.fixed-navbar img');
 // NUEVOS ELEMENTOS DE TERMINAL
 const formInputs = document.querySelectorAll('#pipboy-form .pipboy-input');
 const feedbackTerminal = document.getElementById('feedback-terminal');
-const pipboyForm = document.getElementById('pipboy-form'); // Capturamos el formulario
+const pipboyForm = document.getElementById('pipboy-form'); 
+const sendCommandBtn = document.getElementById('send-command-btn'); // Botón de envío
+const snakeByteBtn = document.getElementById('snake-byte-btn');     // Botón Snake
 
 // Mapeo de mensajes para la terminal
 const validationMessages = {
-    'email': { pass: 'EMAIL OK. INICIANDO CONEXIÓN.', fail: 'ERROR: FORMATO EMAIL INVÁLIDO.' },
-    'asunto': { pass: 'ASUNTO RECIBIDO. CONTINÚE.', fail: 'ERROR: ASUNTO DEMASIADO CORTO.' },
-    'mensaje': { pass: 'MENSAJE ACEPTADO. ESPERANDO TELEFONO.', fail: 'ERROR: MENSAJE REQUERIDO.' },
-    'telefono': { pass: 'VALIDACIÓN TELEFÓNICA COMPLETADA.', fail: 'ERROR: TELÉFONO INVÁLIDO O VACÍO.' }
+    'email': { pass: 'EMAIL OK. CONEXIÓN SEGURA.', fail: 'ERROR: FORMATO INVÁLIDO. REVISAR SINTAXIS.' },
+    'asunto': { pass: 'ASUNTO OK. CONTINUANDO...', fail: 'ERROR: ASUNTO DEMASIADO CORTO O INVÁLIDO.' },
+    'mensaje': { pass: 'MENSAJE OK. DATOS ALMACENADOS.', fail: 'ERROR: MENSAJE VACÍO.' },
+    'telefono': { pass: 'TELÉFONO OK. CONTACTO ESTABLECIDO.', fail: 'ERROR: TELÉFONO INVÁLIDO O INCOMPLETO.' },
+    'vacio': 'ERROR: CAMPO REQUERIDO VACÍO.' // Mensaje para campos obligatorios vacíos
 };
 
 
@@ -347,31 +350,51 @@ function hideLessItems() {
 
 
 // --- EFECTO MÁQUINA DE ESCRIBIR PARA LA TERMINAL ---
+let terminalContent = ''; 
+
 function typewriterEffect(element, text) {
-    let i = 0;
-    // Agregamos un salto de línea antes de la nueva entrada, si no está vacío
-    if (element.textContent.trim() !== '') {
-        element.textContent += '\n'; 
-    }
-    const startIndex = element.textContent.length;
-    element.scrollTop = element.scrollHeight; 
+    // 1. Preparamos el nuevo texto, asegurando un salto de línea si ya hay contenido
+    const newMessage = (terminalContent.trim() !== '' ? '\n' : '') + text;
+    terminalContent += newMessage;
     
-    const speed = 25; // Velocidad de escritura
+    // 2. Inicializamos la escritura
+    let i = 0;
+    const speed = 25; 
+    const currentFullText = element.textContent;
+    
+    // Calculamos el índice donde comienza el nuevo texto
+    const startWriteIndex = currentFullText.length;
+    
+    // Limpiamos el elemento para la animación
+    element.textContent = currentFullText;
     
     function type() {
-        if (i < text.length) {
-            // Aseguramos que solo se añada el texto, manteniendo el contenido anterior
-            element.textContent += text.charAt(i);
+        if (i < newMessage.length) {
+            // Añadimos el nuevo carácter al final del contenido visible
+            element.textContent += newMessage.charAt(i);
             i++;
+            
+            // Forzar desplazamiento al final
             element.scrollTop = element.scrollHeight; 
+            
             setTimeout(type, speed);
         } else {
-            // Añadir el prompt de '>' después de que termine de escribir
+            // Al finalizar el mensaje, añadimos el prompt (>)
             element.textContent += '\n\n>';
+            terminalContent += '\n\n>'; // Actualizamos el contenido guardado con el prompt
             element.scrollTop = element.scrollHeight;
         }
     }
-    type();
+    
+    // Si la terminal está vacía (primer mensaje), empezamos la escritura directamente
+    if (terminalContent.trim() === newMessage.trim()) {
+        element.textContent = '';
+        terminalContent = '';
+        setTimeout(type, speed);
+    } else {
+        // Para mensajes subsiguientes, ejecutamos la animación
+        type();
+    }
 }
 
 // --- LÓGICA DE VALIDACIÓN DE CAMPOS ---
@@ -379,75 +402,93 @@ function validateField(input) {
     const name = input.name;
     const value = input.value.trim();
     let message = '';
-    let isValid = true;
-    
-    if (name === 'email') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        isValid = emailRegex.test(value);
-    } else if (name === 'asunto') {
-        isValid = value.length >= 3;
-    } else if (name === 'mensaje') {
-        isValid = value.length > 0;
-    } else if (name === 'telefono') {
-        const phoneRegex = /^\s*(?:\+?(\d{1,3}))?([-(]?(\d{3})[)-]?)?([ -]?(\d{4}))([ -]?(\d{4}))\s*$/;
-        isValid = phoneRegex.test(value);
-    }
-    
-    if (input.required && value === '') {
-        isValid = false;
-        message = 'ERROR: CAMPO REQUERIDO VACÍO.';
-    } else if (isValid) {
-        message = validationMessages[name].pass;
+    let isValid = false;
+
+    if (value === '') {
+        if (input.required) {
+            message = validationMessages.vacio;
+            isValid = false;
+        } else {
+            message = `[INFO]: CAMPO OPCIONAL VACÍO. IGNORANDO.`;
+            isValid = true;
+        }
     } else {
-        message = validationMessages[name].fail;
+        // Validaciones complejas (campo tiene contenido)
+        if (name === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            isValid = emailRegex.test(value);
+            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
+        } else if (name === 'asunto') {
+            isValid = value.length >= 3;
+            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
+        } else if (name === 'mensaje') {
+            isValid = value.length > 0;
+            message = validationMessages[name].pass;
+        } else if (name === 'telefono') {
+            const phoneRegex = /^\s*(?:\+?(\d{1,3}))?([-(]?(\d{3})[)-]?)?([ -]?(\d{4}))([ -]?(\d{4}))\s*$/;
+            isValid = phoneRegex.test(value);
+            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
+        }
     }
     
-    // Almacenar el estado de validación en el elemento input
     input.setAttribute('data-valid', isValid);
+    typewriterEffect(feedbackTerminal, `${name.toUpperCase()} STATUS:\n${message}`);
     
-    typewriterEffect(feedbackTerminal, `>${name.toUpperCase()} STATUS:\n${message}`);
     return isValid;
 }
 
 
-// --- NUEVA FUNCIÓN: MANEJAR EL ENVÍO DEL FORMULARIO ---
+// --- FUNCIÓN: MANEJAR EL ENVÍO DEL FORMULARIO ---
 function handleFormSubmit(e) {
-    e.preventDefault(); // Detiene la recarga de la página
+    e.preventDefault(); 
 
     let allFieldsValid = true;
-    let requiredFieldsMissing = false;
+    let missingRequiredFields = false;
 
     // 1. Recorre todos los inputs para forzar la validación final y verificar el estado
     formInputs.forEach(input => {
-        // Ejecuta la validación de campo (esto también actualiza el atributo data-valid)
         const isValid = validateField(input);
         
         if (!isValid) {
             allFieldsValid = false;
-            // Si es requerido y está vacío, es un error más grave
             if (input.required && input.value.trim() === '') {
-                requiredFieldsMissing = true;
+                missingRequiredFields = true;
             }
         }
     });
 
-    // 2. Reporta el resultado en la terminal
+    // 2. Reporta el resultado final y controla la visibilidad de los botones
     if (allFieldsValid) {
         typewriterEffect(feedbackTerminal, 
-            'VALIDACIÓN COMPLETA. TODOS LOS CAMPOS CORRECTOS.\n' + 
-            'MENSAJE ENVIADO A LA BASE. ESPERE RESPUESTA.');
+            '>> VALIDACIÓN COMPLETA. TODOS LOS CAMPOS CORRECTOS.\n' + 
+            '>> INICIANDO TRANSMISIÓN DE DATOS...\n' + 
+            '>> MENSAJE ENVIADO. ESPERE RESPUESTA DE LA BASE DE DATOS.\n\n' +
+            '>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.');
         
-        // Opcional: limpiar el formulario después de un envío exitoso ficticio
+        // MOSTRAR BOTÓN SNAKE y OCULTAR ENVÍO
+        if (sendCommandBtn) sendCommandBtn.style.display = 'none';
+        if (snakeByteBtn) snakeByteBtn.style.display = 'inline-block';
+        
+        // Limpiar los campos para simular el envío exitoso
         pipboyForm.reset(); 
 
-    } else if (requiredFieldsMissing) {
+    } else if (missingRequiredFields) {
          typewriterEffect(feedbackTerminal, 
-            'FALLO DE ENVÍO: CAMPOS REQUERIDOS INCOMPLETOS O INVÁLIDOS.\n' + 
-            'VERIFIQUE LA INFORMACIÓN E INTENTE DE NUEVO.');
+            '>> ERROR CRÍTICO DE ENVÍO: FALTAN CAMPOS REQUERIDOS (*).\n' + 
+            '>> VERIFIQUE LA INFORMACIÓN E INTENTE DE NUEVO.');
+        
+        // Asegurar que el botón SNAKE esté oculto
+        if (snakeByteBtn) snakeByteBtn.style.display = 'none';
+        if (sendCommandBtn) sendCommandBtn.style.display = 'inline-block';
+
     } else {
         typewriterEffect(feedbackTerminal, 
-            'FALLO DE ENVÍO: ALGUNOS DATOS SON INVÁLIDOS.\n' + 
-            'AJUSTE LOS PARÁMETROS Y VUELVA A INTENTAR.');
+            '>> ERROR DE ENVÍO: ALGUNOS DATOS SON INVÁLIDOS.\n' + 
+            '>> AJUSTE LOS PARÁMETROS Y VUELVA A INTENTAR.');
+        
+        // Asegurar que el botón SNAKE esté oculto
+        if (snakeByteBtn) snakeByteBtn.style.display = 'none';
+        if (sendCommandBtn) sendCommandBtn.style.display = 'inline-block';
     }
 }
 
@@ -459,12 +500,21 @@ function setupTerminalListeners() {
         input.addEventListener('blur', () => validateField(input));
     });
     
-    // 2. NUEVO: Escuchador para el evento de ENVÍO
+    // 2. Escuchador para el evento de ENVÍO
     if (pipboyForm) {
         pipboyForm.addEventListener('submit', handleFormSubmit);
     }
     
+    // 3. NUEVO: Escuchador para el botón SNAKE (REDIRECCIÓN)
+    if (snakeByteBtn) {
+        snakeByteBtn.addEventListener('click', () => {
+            // Redirige al subdirectorio 'snake/'
+            window.location.href = './snake/index.html'; 
+        });
+    }
+    
     // Mensaje inicial de la terminal
+    terminalContent = ''; 
     typewriterEffect(feedbackTerminal, 'BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...');
 }
 

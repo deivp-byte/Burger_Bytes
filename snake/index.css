@@ -1,0 +1,144 @@
+body {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+    color: white;
+    flex-direction: column;
+}
+
+#game-container {
+    text-align: center;
+    border: 5px solid #4CAF50; /* Borde verde del juego */
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.8);
+    background-color: #222;
+    padding: 20px;
+    position: relative; /* Esencial para posicionar el botón de inicio */
+}
+
+/* --- ESTILOS DEL BOTÓN DE INICIO (LOGO) --- */
+#back-to-home {
+    position: absolute;
+    top: -40px; /* Sube el logo fuera del contenedor */
+    left: -40px; /* Mueve el logo fuera del contenedor */
+    z-index: 10;
+    display: block;
+    border: 3px solid #FFC300;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: transform 0.2s;
+}
+
+#back-to-home:hover {
+    transform: scale(1.1);
+}
+
+#back-to-home img {
+    display: block;
+}
+
+/* --- CONTINUACIÓN DEL ESTILO DEL JUEGO --- */
+
+h1 {
+    color: #FFC300;
+}
+
+#score-board {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    color: #f0f0f0;
+}
+
+#game-board {
+    display: grid;
+    /* Esto se establecerá con JS para que coincida con el tamaño del tablero */
+    grid-template-columns: repeat(20, 20px); 
+    grid-template-rows: repeat(20, 20px);
+    width: 400px; /* 20 * 20px = 400px */
+    height: 400px;
+    background-color: #000;
+    border: 2px solid #000;
+}
+
+.cell {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
+    border: 1px solid #111; /* Líneas de la cuadrícula sutiles */
+}
+
+/* --- ESTILOS DE LOS ELEMENTOS DEL JUEGO --- */
+
+.snake {
+    background-color: #4CAF50; /* Verde de la serpiente */
+    border-radius: 2px;
+}
+
+.head {
+    background-color: #2E8B57; /* Verde más oscuro para la cabeza */
+    position: relative;
+    border-radius: 4px;
+}
+
+/*
+  La hamburguesa de pixel art la implementaremos usando el fondo y sombras CSS.
+  Es más simple que usar el canvas para este tipo de juego.
+*/
+.hamburger {
+    /* 20px x 20px cell */
+    position: relative;
+    background: 
+        /* Pan superior (más claro) */
+        linear-gradient(to top, #FFD700 50%, transparent 50%) 0px 4px / 20px 8px no-repeat,
+        /* Queso/Lechuga (medio) */
+        linear-gradient(to top, #3CB371 50%, transparent 50%) 0px 8px / 20px 4px no-repeat,
+        /* Carne (oscuro) */
+        linear-gradient(to top, #8B4513 50%, transparent 50%) 0px 12px / 20px 4px no-repeat,
+        /* Pan inferior (más oscuro) */
+        #A0522D;
+
+    background-size: 20px 20px;
+}
+
+/* --- MENSAJES DE JUEGO --- */
+
+#message-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+#message-overlay.hidden {
+    display: none;
+}
+
+#game-message {
+    font-size: 2.5em;
+    color: #FFC300;
+    margin-bottom: 20px;
+}
+
+#restart-button {
+    padding: 15px 30px;
+    font-size: 1.5em;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#restart-button:hover {
+    background-color: #388E3C;
+}

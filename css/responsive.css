@@ -754,12 +754,25 @@ body.sidebar-open #page-overlay {
     box-shadow: 0 0 15px var(--pipboy-green-fallout);
 }
 
+/* NUEVO: Estilo para el botón Snake */
+.pipboy-button.snake-button {
+    background: transparent;
+    color: var(--primary-yellow); 
+    border: 3px solid var(--primary-yellow);
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 var(--primary-yellow);
+    margin-top: 15px; 
+}
+.pipboy-button.snake-button:hover {
+    background-color: var(--primary-yellow);
+    color: black;
+    box-shadow: 0 0 15px var(--primary-yellow);
+}
+
 
 /* 2. Estilos de la Terminal de Retroalimentación Derecha */
 
 .pipboy-terminal-carcasa {
     width: 40%;
-    /* Ajustamos la altura para que no sea un valor fijo tan alto como 900px */
     height: 400px; 
     padding: 15px;
     background-color: var(--pipboy-metal); 
@@ -778,12 +791,12 @@ body.sidebar-open #page-overlay {
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
     padding: 10px;
     box-sizing: border-box;
-    overflow-y: auto; /* Permite desplazamiento si hay muchos mensajes */
+    overflow-y: auto; 
 }
 
 /* Estilo para el texto de la terminal */
 #feedback-terminal {
-    white-space: pre-wrap; /* Respeta saltos de línea */
+    white-space: pre-wrap; 
     color: var(--pipboy-green-fallout);
     font-family: monospace;
     font-size: 16px;
@@ -964,9 +977,6 @@ body.sidebar-open #page-overlay {
     }
     .footer-content > div {
         flex-basis: 100%;
-        margin-bottom: 15px;
-    }
-    .footer-content img {
         margin-bottom: 15px;
     }
     .footer-links {
