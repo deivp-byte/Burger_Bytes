@@ -1,22 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
 
-/* --- 0. Variables y Base --- */
 :root {
     --pixel-font: "Pixelify Sans", sans-serif;
     --primary-red: rgba(165, 42, 42, 0.774); 
     --primary-yellow: rgb(255, 255, 0);
-    --primary-green: #6ba733bb; /* Verde genérico */
+    --primary-green: #6ba733bb;
     --dark-bg: rgba(0, 0, 0, 0.699);
     --form-bg: rgba(0, 0, 0, 0.767);
     --border-radius: 10px;
     --shadow-depth: 4px; 
     --card-height-base: 600px; 
-    
-    /* Variables de Paleta Pip-Boy de Fallout */
-    --pipboy-green-fallout: #80FF80; /* Verde Brillante (Luz de texto) */
-    --pipboy-bg-fallout: #1E371E; /* Verde Oscuro (Pantalla inactiva) */
-    --pipboy-metal: #6e6e6e; /* Gris/Verde desgastado para la carcasa */
-    --pipboy-dark-metal: #3d3d3d; /* Metal oscuro */
+    --pipboy-green-fallout: #80FF80; 
+    --pipboy-bg-fallout: #1E371E; 
+    --pipboy-metal: #6e6e6e; 
+    --pipboy-dark-metal: #3d3d3d; 
 }
 
 body {
@@ -26,13 +23,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: beige; 
-} 
-/* IMPORTANTE: Ajustamos el padding superior para el navbar fijo (Logo 100px + padding) */
-body {
     padding-top: 120px; 
 }
 
-/* --- BARRA DE NAVEGACIÓN FIJA (SOLO Logo y Carrito) --- */
 .fixed-navbar {
     position: fixed; 
     top: 0;
@@ -42,13 +35,11 @@ body {
     background-color: rgba(255, 255, 255, 0); 
     padding: 10px 5%; 
     box-sizing: border-box;
-    
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-/* EFECTO PULSADO PARA EL LOGO */
 .fixed-navbar img {
     cursor: pointer;
     transition: transform 0.1s ease, opacity 0.1s ease;
@@ -59,7 +50,6 @@ body {
     opacity: 0.8;
 }
 
-/* --- NUEVO: EFECTO SCANLINES (Líneas CRT) --- */
 body::after {
     content: '';
     position: fixed;
@@ -78,8 +68,6 @@ body::after {
     z-index: 9999; 
 }
 
-
-/* --- NUEVO: OVERLAY DE PÁGINA PARA BARRA LATERAL --- */
 #page-overlay {
     position: fixed;
     top: 0;
@@ -92,13 +80,12 @@ body::after {
     opacity: 0;
     transition: opacity 0.4s;
 }
-/* Activado por JavaScript al abrir la sidebar */
+
 body.sidebar-open #page-overlay {
     visibility: visible;
     opacity: 1;
 }
 
-/* Video */
 #bg-video {
     position: absolute; 
     top: 0;
@@ -110,7 +97,6 @@ body.sidebar-open #page-overlay {
     opacity: 0.8;
 }
 
-/* --- Header y Navegación (RESTAURADA) --- */
 .header {
     top: 0;
     transition: all 0.3s ease;
@@ -118,7 +104,6 @@ body.sidebar-open #page-overlay {
     height: 950px; 
     background-color: var(--primary-yellow);
     z-index: 100;
-    
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,7 +113,8 @@ body.sidebar-open #page-overlay {
     overflow: hidden;
     margin-top:-120px;
 }
-.header h1{
+
+.header h1 {
     margin-top:-110px;
 }
 
@@ -152,7 +138,6 @@ body.sidebar-open #page-overlay {
     background-color:beige;
     border: 5px solid black;
     transition: all 0.2s ease;
-
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
@@ -168,7 +153,6 @@ body.sidebar-open #page-overlay {
     color: black;
 }
 
-/* --- Efecto Typewriter (Horizontal con Cursor _) --- */
 .typewriter {
     --typewriter-steps: 12; 
     --typewriter-speed: 2s;
@@ -180,23 +164,17 @@ body.sidebar-open #page-overlay {
     text-align: center;
     font-size: 100px;
     color: black ;
-    
     animation: typing var(--typewriter-speed) steps(var(--typewriter-steps), end) forwards;
 }
 
-/* CURSOR HORIZONTAL PARPADEANTE */
 .typewriter::after {
     content: '_'; 
     opacity: 0; 
-    
-    animation: 
-        blink-opacity 0.75s step-end infinite;
-        
+    animation: blink-opacity 0.75s step-end infinite;
     animation-delay: var(--typewriter-speed);
     animation-fill-mode: forwards; 
 }
 
-/* Keyframes */
 @keyframes typing {
     from { width: 0 }
     to { width: 12ch }
@@ -206,10 +184,7 @@ body.sidebar-open #page-overlay {
     from, to { opacity: 0 }
     50% { opacity: 1 }
 }
-/* --- Fin Typewriter --- */
 
-
-/* CARRITO: CONTADOR VISIBLE */
 .cart-icon {
     font-size: 24px;
     padding: 5px 10px;
@@ -218,14 +193,11 @@ body.sidebar-open #page-overlay {
     border-radius: 5px;
     transition: background 0.3s;
     cursor: pointer;
-    
 }
 
 .cart-icon:hover {
     background: lightgray;
 }
-
-/* --- ESTILOS: BARRA LATERAL DEL CARRITO (ASIDE) --- */
 
 #cart-sidebar {
     position: fixed;
@@ -236,16 +208,16 @@ body.sidebar-open #page-overlay {
     background-color: #f0f0f0;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    
     transform: translateX(100%);
     transition: transform 0.4s ease-out;
-
     display: flex;
     flex-direction: column;
 }
+
 #cart-sidebar.open {
     transform: translateX(0);
 }
+
 .sidebar-header {
     background-color: #333;
     color: white;
@@ -255,6 +227,7 @@ body.sidebar-open #page-overlay {
     align-items: center;
     flex-shrink: 0;
 }
+
 .sidebar-header h2 {
     margin: 0;
     font-size: 24px;
@@ -274,6 +247,7 @@ body.sidebar-open #page-overlay {
 .close-btn:hover {
     color: red;
 }
+
 .sidebar-list {
     list-style: none;
     padding: 10px 15px;
@@ -282,6 +256,7 @@ body.sidebar-open #page-overlay {
     flex-grow: 1;
     color: #333;
 }
+
 .sidebar-list li {
     display: flex;
     justify-content: space-between;
@@ -316,6 +291,7 @@ body.sidebar-open #page-overlay {
 .remove-btn:hover {
     background: darkred;
 }
+
 .sidebar-footer {
     display: flex;
     flex-direction: column;
@@ -344,9 +320,9 @@ body.sidebar-open #page-overlay {
     width: 100%;
     transition: background-color 0.2s;
     margin-bottom: 8px;
-    /* EFECTO 3D EN BOTONES PRINCIPALES */
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
+
 .clear-all-btn {
     background-color: #f44336;
     color: white;
@@ -355,6 +331,7 @@ body.sidebar-open #page-overlay {
 .clear-all-btn:hover {
     background-color: darkred;
 }
+
 .checkout-btn {
     background-color: var(--primary-red);
     color: white;
@@ -362,14 +339,10 @@ body.sidebar-open #page-overlay {
     margin-bottom: 0;
 }
 
-/* ESTILOS PRESIONADOS PARA TODOS LOS BOTONES 3D */
 .clear-all-btn:active, .checkout-btn:active, .add-to-cart-btn:active, .button-link:active, .pipboy-button:active {
     transform: translate(var(--shadow-depth), var(--shadow-depth));
     box-shadow: none;
 }
-
-
-/* --- Efectos JS --- */
 
 @keyframes cartBounce {
     0%, 100% { transform: translateY(0); }
@@ -381,7 +354,6 @@ body.sidebar-open #page-overlay {
     background-color: #33d02b;
 }
 
-/* 2. Efecto de "pulsado" en el botón */
 .add-to-cart-btn.clicked {
     background-color: #000;
     color: #fff;
@@ -389,10 +361,6 @@ body.sidebar-open #page-overlay {
     border-color: #fff;
 }
 
-
-/* --- 3. Contenido y Tarjetas (Cards) --- */
-
-/* ESTILOS DE FONDOS DE TÍTULOS */
 .top, .header2 {
     text-align: center;
     font-size: 40px; 
@@ -423,33 +391,26 @@ body.sidebar-open #page-overlay {
     gap: 1.5%;
 }
 
-/* --- REGLAS DE COLAPSO DE CARTA (APLICADAS POR JS EN .section2) --- */
-
-/* Clase base que JS usará para controlar la altura inicial */
 .section2.collapsed {
     overflow: hidden; 
     transition: max-height 0.8s ease-in-out; 
 }
 
-/* Clase que JS añade para expandir el contenedor */
 .section2.expanded {
-    /* max-height para evitar que los artículos se salgan */
     max-height: 9999px !important; 
 }
 
-/* Ocultación y transición individual de los ítems */
 .card-item.hidden-item {
     opacity: 0;
     display: none; 
     transition: opacity 0.3s ease-in; 
 }
+
 .card-item.hidden-item.is-visible {
     opacity: 1;
     display: flex;
 }
 
-
-/* Estilos para el contenedor del botón (centrado) */
 .load-more-container {
     text-align: center;
     margin-top: 40px;
@@ -458,7 +419,6 @@ body.sidebar-open #page-overlay {
     width: 100%; 
 }
 
-/* Estilo para los botones Ver Más/Menos (Centrado y Estilo) */
 #load-more-btn, #hide-less-btn {
     font-size: 22px; 
     padding: 12px 25px;
@@ -466,7 +426,6 @@ body.sidebar-open #page-overlay {
     margin-left: 10px; 
 }
 
-/* Estilo de Tarjeta de Producto (Articulo) */
 .card-item {
     width: 30%;
     color: rgb(0, 0, 0);
@@ -480,17 +439,21 @@ body.sidebar-open #page-overlay {
     align-items: center;
     min-height: var(--card-height-base);
 }
+
 .card-item h4 {
     margin-bottom:-2px;
 }
+
 .card-item h4, .card-item p {
     width: 60%;
 }
+
 .card-item img {
     margin: 10px 0;
     border-radius: 15px;
     transition: transform 1s ease, box-shadow 1s ease;
 }
+
 .card-item:hover img {
     transform: scale(1.1);
     box-shadow: 0 0 20px 5px rgba(255, 255, 0, 0.7);
@@ -507,7 +470,6 @@ body.sidebar-open #page-overlay {
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
-    /* EFECTO 3D EN BOTÓN DE AÑADIR */
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
     position: relative;
     z-index: 10;
@@ -518,7 +480,6 @@ body.sidebar-open #page-overlay {
     transform: translateY(-2px);
 }
 
-/* Estilo de la tarjeta de Oferta Especial */
 .special-offer-card {
     width: 80%;
     margin: 20px auto;
@@ -537,8 +498,6 @@ body.sidebar-open #page-overlay {
     to { border-color: red; box-shadow: 0 0 15px red, 0 0 25px red; }
 }
 
-
-/* --- 4. Ubicación --- */
 .location-container {
     display: flex;
     justify-content: space-around;
@@ -547,7 +506,6 @@ body.sidebar-open #page-overlay {
     gap: 30px;
 }
 
-/* ESTILO DE LA CAJA DE LA TERMINAL (map-placeholder) */
 .map-placeholder {
     width: 45%;
     height: 350px;
@@ -555,16 +513,13 @@ body.sidebar-open #page-overlay {
     border: 5px solid black;
     box-shadow: 0 0 15px rgba(0, 255, 0, 0.8), inset 0 0 10px black; 
     border-radius: 5px;
-    
     display: flex; 
     overflow: hidden;
-    
     justify-content: center;
     align-items: center;
     padding: 0; 
 }
 
-/* Estilo de la imagen dentro del placeholder del mapa */
 .map-placeholder img {
     width: 100%;
     height: 100%;
@@ -586,7 +541,7 @@ body.sidebar-open #page-overlay {
     padding-left: 20px;
     line-height: 1.8;
 }
-/* MANTENEMOS ESTILOS DE .button-link para otros botones (Ver Más, etc.) */
+
 .button-link {
     font-family: var(--pixel-font);
     display: inline-block;
@@ -598,7 +553,6 @@ body.sidebar-open #page-overlay {
     border: 3px solid black;
     border-radius: 5px;
     transition: background 0.3s;
-    /* EFECTO 3D EN BOTÓN DE MAPA */
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 black;
 }
 
@@ -607,14 +561,10 @@ body.sidebar-open #page-overlay {
     color: white;
 }
 
-
-/* --- 5. Contacto y Formulario (REDESIGN PIP-BOY - CSS PURO) --- */
-
-/* Contenedor Principal de la Sección de Contacto */
 .pipboy-section {
     text-align: center;
     font-size: 40px;
-    background-color: beige; /* FONDO BEIGE RESTAURADO */
+    background-color: beige; 
     padding-bottom: 20px;
     border-radius: var(--border-radius);
     border: solid black;
@@ -627,29 +577,21 @@ body.sidebar-open #page-overlay {
     border: solid var(--pipboy-green-fallout);
     width: 400px;
     padding: 5px 0;
-    /* Efecto Neón Suave en el título de la sección */
     box-shadow: 0 0 10px var(--pipboy-green-fallout);
-    color: black; /* Cambiamos el color del texto del h1 a negro para que destaque en el beige */
+    color: black; 
 }
-
-/* --- ESTILOS DEL MONITOR/PANTALLA PIP-BOY (CSS PURO) --- */
 
 .pipboy-screen-container {
     width: 80%;
     max-width: 900px;
     margin: 30px auto;
-    padding: 30px 10px 30px 10px; /* Padding para simular el marco de la carcasa */
-    background-color: var(--pipboy-metal); /* Fondo metálico */
+    padding: 30px 10px 30px 10px; 
+    background-color: var(--pipboy-metal); 
     border-radius: 15px;
     position: relative; 
-    
-    /* Simulación de Carcasa 3D */
-    box-shadow: 
-        0 0 20px rgba(0, 0, 0, 0.5), /* Sombra exterior */
-        inset 0 0 15px var(--pipboy-dark-metal); /* Sombra interior */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), inset 0 0 15px var(--pipboy-dark-metal); 
 }
 
-/* Contenedor Flex para la disposición del Formulario + Terminal */
 .pipboy-flex-content {
     display: flex;
     justify-content: space-between;
@@ -658,26 +600,20 @@ body.sidebar-open #page-overlay {
     padding: 20px;
 }
 
-/* Ocultamos los textos que se reemplazan por la imagen de fondo */
 .pipboy-header, .pipboy-footer {
     display: none;
 }
 
-/* 1. Estilos del Formulario (Pantalla Principal) */
 .formulari.pipboy-content.form-area {
-    /* La pantalla interior */
     width: 60%;
     height: auto;
     padding: 20px;
     margin: 0 auto;
     position: static;
-    
-    background-color: var(--pipboy-bg-fallout); /* Fondo de la pantalla CRT */
-    border: 5px solid var(--pipboy-dark-metal); /* Marco interior de la pantalla */
+    background-color: var(--pipboy-bg-fallout); 
+    border: 5px solid var(--pipboy-dark-metal); 
     border-radius: 5px;
-    box-shadow: 
-        0 0 10px rgba(128, 255, 128, 0.4), /* Brillo sutil */
-        inset 0 0 15px rgba(0, 0, 0, 0.9); /* Profundidad de la pantalla */
+    box-shadow: 0 0 10px rgba(128, 255, 128, 0.4), inset 0 0 15px rgba(0, 0, 0, 0.9); 
 }
 
 .pipboy-content p {
@@ -703,7 +639,6 @@ body.sidebar-open #page-overlay {
     text-shadow: 0 0 3px var(--pipboy-green-fallout);
 }
 
-/* Estilo para los Inputs (Líneas de Comando) */
 .pipboy-input {
     font-family: var(--pixel-font);
     background: transparent;
@@ -719,7 +654,7 @@ body.sidebar-open #page-overlay {
 }
 
 .pipboy-input:focus {
-    border-bottom: 2px solid var(--pipboy-green-fallout);
+    border-bottom: 2px solid var(--primary-yellow);
     box-shadow: 0 0 8px var(--pipboy-green-fallout); 
 }
 
@@ -732,7 +667,6 @@ body.sidebar-open #page-overlay {
     border-radius: 0;
 }
 
-/* Botón de Envío (Terminal) */
 .pipboy-button {
     font-family: var(--pixel-font);
     font-size: 20px;
@@ -744,7 +678,6 @@ body.sidebar-open #page-overlay {
     color: var(--pipboy-green-fallout);
     cursor: pointer;
     transition: background-color 0.2s, box-shadow 0.2s;
-    
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 var(--pipboy-green-fallout);
 }
 
@@ -754,7 +687,6 @@ body.sidebar-open #page-overlay {
     box-shadow: 0 0 15px var(--pipboy-green-fallout);
 }
 
-/* NUEVO: Estilo para el botón Snake */
 .pipboy-button.snake-button {
     background: transparent;
     color: var(--primary-yellow); 
@@ -762,14 +694,12 @@ body.sidebar-open #page-overlay {
     box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 var(--primary-yellow);
     margin-top: 15px; 
 }
+
 .pipboy-button.snake-button:hover {
     background-color: var(--primary-yellow);
     color: black;
     box-shadow: 0 0 15px var(--primary-yellow);
 }
-
-
-/* 2. Estilos de la Terminal de Retroalimentación Derecha */
 
 .pipboy-terminal-carcasa {
     width: 40%;
@@ -777,10 +707,7 @@ body.sidebar-open #page-overlay {
     padding: 15px;
     background-color: var(--pipboy-metal); 
     border-radius: 10px;
-    
-    box-shadow: 
-        var(--shadow-depth) var(--shadow-depth) 0 0 var(--pipboy-dark-metal),
-        inset 0 0 10px var(--pipboy-dark-metal);
+    box-shadow: var(--shadow-depth) var(--shadow-depth) 0 0 var(--pipboy-dark-metal), inset 0 0 10px var(--pipboy-dark-metal);
 }
 
 .pipboy-terminal-screen {
@@ -794,7 +721,6 @@ body.sidebar-open #page-overlay {
     overflow-y: auto; 
 }
 
-/* Estilo para el texto de la terminal */
 #feedback-terminal {
     white-space: pre-wrap; 
     color: var(--pipboy-green-fallout);
@@ -803,9 +729,6 @@ body.sidebar-open #page-overlay {
     text-shadow: 0 0 4px var(--pipboy-green-fallout);
     margin: 0;
 }
-
-
-/* --- 6. Footer --- */
 
 .footer {
     background-color: #333;
@@ -825,14 +748,12 @@ body.sidebar-open #page-overlay {
     gap: 20px;
 }
 
-/* Aplicamos flex-basis solo a los divs de contenido */
 .footer-content > div { 
     flex-basis: 200px;
     padding: 10px;
     text-align: center;
 }
 
-/* Estilo para el LOGO PRINCIPAL del footer (80x80) */
 .footer-content > img:not(.social-icon) {
     width: 80px; 
     height: 80px; 
@@ -842,7 +763,6 @@ body.sidebar-open #page-overlay {
     margin: 10px;
 }
 
-/* Estilo para los enlaces de navegación */
 .footer-links h2 {
     font-size: 20px;
     margin: 5px 0;
@@ -858,13 +778,11 @@ body.sidebar-open #page-overlay {
     color: var(--primary-yellow);
 }
 
-/* Estilo para las Redes Sociales */
 .social-media p {
     margin-bottom: 10px;
     font-size: 18px;
 }
 
-/* Estilo para los ICONOS SOCIALES (30x30) */
 .social-media .social-icon { 
     width: 30px;
     height: 30px;
@@ -879,7 +797,6 @@ body.sidebar-open #page-overlay {
     transform: scale(1.2);
 }
 
-/* Estilo para los Créditos */
 .credits {
     flex-basis: 100%;
     margin-top: 20px;
@@ -892,8 +809,6 @@ body.sidebar-open #page-overlay {
 .credits p {
     margin: 5px 0;
 }
-
-/* --- 7. Media Queries (AJUSTES PARA RESPONSIVE) --- */
 
 @media (max-width: 1024px) {
     .typewriter {
@@ -912,17 +827,13 @@ body.sidebar-open #page-overlay {
     .box {
         width: 70%;
     }
-    
-    /* Regla de colapso para tablet (2 filas visibles) */
     .section2.collapsed {
         max-height: calc(2 * var(--card-height-base) + 100px); 
     }
-    
     .pipboy-screen-container {
         width: 90%;
         padding: 20px 10px; 
     }
-    
     .pipboy-flex-content {
         flex-direction: column;
         gap: 20px;
@@ -938,9 +849,7 @@ body.sidebar-open #page-overlay {
     }
 }
 
-
 @media (max-width: 768px) {
-    /* AJUSTES PARA EL HEADER EN MÓVIL */
     .header {
         height: 500px; 
     }
@@ -955,12 +864,9 @@ body.sidebar-open #page-overlay {
         flex-wrap: wrap;
         gap: 5px;
     }
-    
-    /* CAMBIO CLAVE PARA CARTA RESPONSIVE */
     .section2.collapsed {
         max-height: calc(3 * var(--card-height-base) + 100px); 
     }
-    
     .typewriter {
         font-size: 50px;
     }
@@ -982,61 +888,47 @@ body.sidebar-open #page-overlay {
     .footer-links {
         order: -1;
     }
-    
-    /* Ajuste en móvil para la barra lateral (slide-out) */
     #cart-sidebar {
         width: 100%; 
         z-index: 9999;
     }
-
     .pipboy-section h1 {
         width: 95%;
         font-size: 30px;
     }
-    
     .pipboy-screen-container {
         width: 95%;
     }
-
     .formulari.pipboy-content.form-area {
         width: 100%;
         padding: 10px;
     }
-    
     .pipboy-terminal-carcasa {
         height: 250px;
     }
-    
     .pipboy-form label {
         font-size: 16px;
         margin-top: 10px;
     }
-    
 }
-
 
 @media (max-width: 480px) {
     .typewriter {
         font-size: 35px;
     }
-    .top h1,
-    .header2 h1,
-    .contacto h1 {
+    .top h1, .header2 h1, .contacto h1 {
         width: 90%;
         font-size: 28px;
     }
     .card-item {
         width: 95%;
     }
-    
     body {
         padding-top: 100px;
     }
-
     .pipboy-section h1 {
         width: 100%;
     }
-    
     .pipboy-form {
         width: 100%;
     }
