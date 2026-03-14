@@ -276,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    //usp
     // --- ARRANQUE INICIAL ---
     showStartScreen();
 });
