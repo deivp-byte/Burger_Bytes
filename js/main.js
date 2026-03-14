@@ -48,50 +48,6 @@ const allCards = document.querySelectorAll('.section2 .card-item');
 
 // 3. Inicializa el contador
 let cartItems = []; 
-let initializationAttempts = 0; 
-
-function setInitialLayout() {
-    if (initializationAttempts >= 10) {
-        setupListeners(); 
-        renderCart();
-        return;
-    }
-    initializationAttempts++;
-
-    window.requestAnimationFrame(() => {
-        if (allCards.length === 0 || !sectionCardsContainer) {
-            setupListeners();
-            renderCart();
-            return;
-        }
-        
-        const firstRowCards = Array.from(allCards).slice(0, 3);
-        
-        if (firstRowCards.length > 0) {
-            const firstCardHeight = firstRowCards[0].offsetHeight;
-            
-            if (firstCardHeight === 0) {
-                setTimeout(setInitialLayout, 50); 
-                return;
-            }
-
-            const initialHeight = firstCardHeight + 80; 
-            sectionCardsContainer.style.maxHeight = `${initialHeight}px`;
-            sectionCardsContainer.classList.add('collapsed'); 
-
-            const initiallyHiddenCards = Array.from(allCards).slice(3);
-            initiallyHiddenCards.forEach(card => {
-                card.classList.add('hidden-item'); 
-                card.style.display = 'none'; 
-            });
-            
-            if (hideLessBtn) hideLessBtn.style.display = 'none';
-        }
-        
-        setupListeners();
-        renderCart();
-    });
-}
 
 // --- LÓGICA DE CARRITO Y NAVEGACIÓN ---
 function openSidebar() {
@@ -236,46 +192,45 @@ function handleLogoClick(e) {
     setTimeout(() => e.target.classList.remove('clicked'), 200); 
 }
 
+// --- LÓGICA DE "VER MÁS ARTÍCULOS" (Cascada suave) ---
 function loadMoreItems() {
-    if (!sectionCardsContainer) return;
-    sectionCardsContainer.classList.remove('collapsed');
-    sectionCardsContainer.classList.add('expanded');
-    
     const hiddenCardsToReveal = document.querySelectorAll('.section2 .hidden-item');
+
     hiddenCardsToReveal.forEach((card, index) => {
-        card.style.display = 'flex'; 
-        setTimeout(() => card.classList.add('is-visible'), 50 + index * 100); 
+        card.style.display = 'flex'; // Ocupa su espacio
+        
+        // Forzamos un reflow para que el navegador registre el display:flex antes de animar la opacidad
+        void card.offsetWidth; 
+        
+        // Efecto cascada con un pequeño retraso entre tarjetas
+        setTimeout(() => {
+            card.classList.add('is-visible');
+        }, index * 80); 
     });
 
-    if (loadMoreBtn) {
-        loadMoreBtn.style.display = 'none';
-        loadMoreBtn.style.pointerEvents = 'none'; 
-    }
-    if (hideLessBtn) {
-        hideLessBtn.style.display = 'inline-block';
-        hideLessBtn.style.pointerEvents = 'auto'; 
-    }
+    if (loadMoreBtn) loadMoreBtn.style.display = 'none';
+    if (hideLessBtn) hideLessBtn.style.display = 'inline-block';
 }
 
+// --- LÓGICA DE "VER MENOS ARTÍCULOS" ---
 function hideLessItems() {
-    if (!sectionCardsContainer) return;
-    sectionCardsContainer.classList.remove('expanded');
-    sectionCardsContainer.classList.add('collapsed');
-
     const cardsToHide = document.querySelectorAll('.section2 .hidden-item');
+    
+    // Les quitamos la visibilidad (se hacen transparentes y bajan)
     cardsToHide.forEach((card) => {
         card.classList.remove('is-visible');
-        setTimeout(() => card.style.display = 'none', 400); 
+        
+        // Esperamos a que termine la transición CSS (400ms) para quitarlas del flujo
+        setTimeout(() => {
+            card.style.display = 'none';
+        }, 400); 
     });
     
-    if (loadMoreBtn) {
-        loadMoreBtn.style.display = 'inline-block';
-        loadMoreBtn.style.pointerEvents = 'auto'; 
-    }
-    if (hideLessBtn) {
-        hideLessBtn.style.display = 'none';
-        hideLessBtn.style.pointerEvents = 'none'; 
-    }
+    if (loadMoreBtn) loadMoreBtn.style.display = 'inline-block';
+    if (hideLessBtn) hideLessBtn.style.display = 'none';
+
+    // Volvemos a hacer scroll suave hacia arriba de la carta para no perderse
+    smoothScroll('#carta-section'); 
 }
 
 // --- TERMINAL ---
@@ -302,8 +257,7 @@ function setupTerminalListeners() {
     initTerminalTypewriter();
 }
 
-
-// --- NUEVA LÓGICA ROBUSTA PARA EL MODAL DE BORRADO ---
+// --- MODAL DE BORRADO ---
 function setupModalListeners() {
     let formToSubmit = null; 
     const deleteModal = document.getElementById('delete-modal');
@@ -312,22 +266,18 @@ function setupModalListeners() {
     
     if(!deleteModal) return;
 
-    // CAMBIO CLAVE: Escuchamos el CLIC en lugar del SUBMIT
     document.addEventListener('click', function(e) {
-        // Comprobamos si lo que se ha clicado es exactamente el botón de la 'X'
         if (e.target && e.target.classList.contains('remove-btn')) {
-            // Comprobamos si este botón 'X' está dentro de un formulario de borrado
             const parentForm = e.target.closest('.delete-form');
             
             if (parentForm) {
-                e.preventDefault(); // ¡FRENAMOS EL CLIC EN SECO!
-                formToSubmit = parentForm; // Guardamos el formulario en memoria
-                deleteModal.classList.remove('hidden'); // Mostramos la alerta retro
+                e.preventDefault(); 
+                formToSubmit = parentForm; 
+                deleteModal.classList.remove('hidden'); 
             }
         }
     });
 
-    // Botón de Cancelar
     if (cancelDeleteBtn) {
         cancelDeleteBtn.addEventListener('click', () => {
             deleteModal.classList.add('hidden'); 
@@ -335,18 +285,15 @@ function setupModalListeners() {
         });
     }
 
-    // Botón de Confirmar Purga
     if (confirmDeleteBtn) {
         confirmDeleteBtn.addEventListener('click', () => {
             if (formToSubmit) {
-                // Inyectamos la señal secreta para que el PHP lo procese
                 const hiddenInput = document.createElement('input');
                 hiddenInput.type = 'hidden';
                 hiddenInput.name = 'delete_consulta';
                 hiddenInput.value = '1';
                 formToSubmit.appendChild(hiddenInput);
                 
-                // ¡Fuego! Enviamos el borrado
                 formToSubmit.submit(); 
             }
         });
@@ -362,9 +309,13 @@ function setupListeners() {
     if (loadMoreBtn) loadMoreBtn.addEventListener('click', loadMoreItems);
     if (hideLessBtn) hideLessBtn.addEventListener('click', hideLessItems);
     setupTerminalListeners();
-    
-    // INICIAR EL MODAL AQUÍ (Asegura que el HTML ya cargó completo)
     setupModalListeners();
+    
+    // Mostramos los botones correctos al inicio por si acaso
+    if (hideLessBtn) hideLessBtn.style.display = 'none';
 }
 
-document.addEventListener('DOMContentLoaded', setInitialLayout);
+document.addEventListener('DOMContentLoaded', () => {
+    setupListeners();
+    renderCart(); // Aseguramos que el carrito empiece vacío visualmente
+});
