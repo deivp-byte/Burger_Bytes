@@ -2,20 +2,19 @@
 // ==========================================
 // 1. CONEXIÓN A LA BASE DE DATOS POSTGRESQL (AIVEN)
 // ==========================================
-$host = 'pg-1bbbdb5b-deividprueba.j.aivencloud.com'; 
+$host = 'deivid123-deividprueba.c.aivencloud.com'; 
 $port = '14862';       
 $dbname = 'burger_bytes'; 
 $user = 'avnadmin';      
-$password = 'AVNS_gCyICTfNaWKS47tT3fS';
+$password = 'AVNS_UhqeIZJ-Luzsf6oVbO0'; 
 
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
 
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 } catch (PDOException $e) {
     die("Error de conexión a la base de datos: " . $e->getMessage());
 }
-
 // ==========================================
 // 2. LÓGICA DE BORRADO (Si se hace clic en la 'X')
 // ==========================================
@@ -43,6 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
 
     $errores = [];
 
+    // Validaciones
     if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errores[] = "ERROR: E-MAIL INVÁLIDO O VACÍO.";
     }
@@ -53,6 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
          $errores[] = "ERROR: EL MENSAJE ES OBLIGATORIO.";
     }
 
+    // Si no hay errores, guardamos en base de datos
     if (empty($errores)) {
         $stmt = $pdo->prepare("INSERT INTO consultas (email, asunto, mensaje, telefono) VALUES (:email, :asunto, :mensaje, :telefono)");
         $stmt->execute([
@@ -65,6 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
         $terminal_message = ">> VALIDACIÓN SERVIDOR COMPLETA.\n>> DATOS SANITIZADOS Y GUARDADOS EN BD.\n>> [OK] COMANDO REGISTRADO.\n\n>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.\n\n>";
         $show_snake_btn = true; 
     } else {
+        // Si hay errores, preparamos el mensaje de la terminal
         $terminal_message = ">> ERROR CRÍTICO DE ENVÍO:\n";
         foreach ($errores as $error) {
             $terminal_message .= " - " . $error . "\n";
@@ -85,7 +87,7 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/responsive.css"> 
+    <link rel="stylesheet" href="./css/responsive.css?v=2"> 
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
     <title>Burger Bytes - Retro Food</title>
 </head>
@@ -274,7 +276,6 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </section>
 
-
         <section id="contacto-section" class="pipboy-section">
             <h1>Contacto | ¡Get a Byte!</h1>
             
@@ -298,23 +299,22 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                             <button type="submit" name="submit_consulta" id="send-command-btn" class="pipboy-button">>> ENVIAR COMANDO</button>
                             
-                            </form>
+                        </form>
                     </div>
 
                     <div class="pipboy-terminal-carcasa">
                         <div class="pipboy-terminal-screen">
-                            <pre id="feedback-terminal">
-                            <?php
-                            // Lógica para mostrar mensajes de la terminal desde PHP
-                            if (isset($terminal_message)) {
-                                echo htmlspecialchars($terminal_message);
-                            } else {
-                                echo "BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...\n\n>";
-                            }
-                            ?>
+                            <pre id="feedback-terminal"><?php
+                                // Lógica para mostrar mensajes de la terminal desde PHP
+                                if (isset($terminal_message)) {
+                                    echo htmlspecialchars($terminal_message);
+                                } else {
+                                    echo "BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...\n\n>";
+                                }
+                                ?>
                             </pre>
                             <?php if (isset($show_snake_btn) && $show_snake_btn): ?>
-                                <a href="index_snake.php" id="snake-byte-btn" class="pipboy-button snake-button">> SNAKE BYTE <</a>
+                                <a href="index_snake.php" id="snake-byte-btn" class="pipboy-button snake-button" style="display:inline-block; text-decoration:none;">> SNAKE BYTE <</a>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -334,7 +334,7 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <?php foreach ($consultas_faq as $consulta): ?>
                             <li style="border: 2px solid var(--primary-yellow); padding: 15px; margin-bottom: 15px; border-radius: 5px; background: rgba(0,0,0,0.5); position: relative;">
                                 
-                                <form action="index.php" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                                <form action="index.php" method="POST" class="delete-form" style="position: absolute; top: 10px; right: 10px;">
                                     <input type="hidden" name="id_consulta" value="<?= $consulta['id']; ?>">
                                     <button type="submit" name="delete_consulta" class="remove-btn" title="Borrar Consulta">X</button>
                                 </form>
@@ -398,60 +398,17 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button class="checkout-btn">IR A PAGAR</button>
         </div>
     </aside>
-
-    <script src="js/main.js"></script> 
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal-content retro-box">
+            <h2 class="warning-text">⚠️ ADVERTENCIA ⚠️</h2>
+            <p>¿ESTÁS SEGURO DE QUE DESEAS PURGAR ESTE DATO?</p>
+            <p style="font-size: 14px; color: #ccc;">Esta acción no se puede deshacer.</p>
+            <div class="modal-buttons">
+                <button id="cancel-delete-btn" class="button-link" style="margin-top: 0;">CANCELAR</button>
+                <button id="confirm-delete-btn" class="clear-all-btn" style="width: auto; margin-bottom: 0;">SÍ, PURGAR</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js?v=2"></script> 
 </body>
 </html>
-
-<?php
-// --- LÓGICA DE PROCESAMIENTO PHP ---
-// procesando los datos si el formulario ha sido enviado.
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
-    
-    // 1. Recoger y sanitizar datos
-    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
-    $asunto = htmlspecialchars(trim($_POST["asunto"]));
-    $mensaje = htmlspecialchars(trim($_POST["mensaje"]));
-    $telefono = htmlspecialchars(trim($_POST["telefono"]));
-
-    $errores = [];
-
-    // 2. Validación en Servidor
-    if (empty($email)) {
-        $errores[] = "ERROR: E-MAIL ES OBLIGATORIO.";
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errores[] = "ERROR: FORMATO DE E-MAIL INVÁLIDO.";
-    }
-
-    if (!empty($asunto) && strlen($asunto) < 3) {
-         $errores[] = "ERROR: ASUNTO DEMASIADO CORTO.";
-    }
-
-    if (!empty($telefono)) {
-        // Expresión regular básica para teléfono (adaptar según necesidad)
-        if (!preg_match("/^[0-9\-\+\s\(\)]{9,20}$/", $telefono)) {
-             $errores[] = "ERROR: FORMATO DE TELÉFONO INVÁLIDO.";
-        }
-    }
-
-    // 3. Procesar resultados
-    if (empty($errores)) {
-        // Si no hay errores
-        
-        $terminal_message = ">> VALIDACIÓN SERVIDOR COMPLETA.\n>> DATOS SANITIZADOS Y CORRECTOS.\n>> INICIANDO TRANSMISIÓN A BASE DE DATOS...\n>> [OK] COMANDO REGISTRADO.\n\n>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.\n\n>";
-        
-        // mostrar el botón de Snake
-        $show_snake_btn = true; 
-        
-    } else {
-        // Si hay errores
-        $terminal_message = ">> ERROR CRÍTICO DE ENVÍO:\n";
-        foreach ($errores as $error) {
-            $terminal_message .= " - " . $error . "\n";
-        }
-        $terminal_message .= ">> REVISE LOS DATOS Y VUELVA A INTENTAR.\n\n>";
-        $show_snake_btn = false;
-    }
-}
-?>
