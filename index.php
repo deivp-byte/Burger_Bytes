@@ -1,3 +1,85 @@
+<?php
+// ==========================================
+// 1. CONEXIÓN A LA BASE DE DATOS POSTGRESQL (AIVEN)
+// ==========================================
+$host = 'pg-1bbbdb5b-deividprueba.j.aivencloud.com'; 
+$port = '14862';       
+$dbname = 'burger_bytes'; 
+$user = 'avnadmin';      
+$password = 'AVNS_gCyICTfNaWKS47tT3fS';
+
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+
+try {
+    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+} catch (PDOException $e) {
+    die("Error de conexión a la base de datos: " . $e->getMessage());
+}
+
+// ==========================================
+// 2. LÓGICA DE BORRADO (Si se hace clic en la 'X')
+// ==========================================
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_consulta'])) {
+    $id_borrar = filter_input(INPUT_POST, 'id_consulta', FILTER_VALIDATE_INT);
+    if ($id_borrar) {
+        $stmt = $pdo->prepare("DELETE FROM consultas WHERE id = :id");
+        $stmt->execute(['id' => $id_borrar]);
+    }
+    header("Location: index.php#faq-section");
+    exit;
+}
+
+// ==========================================
+// 3. LÓGICA DE INSERCIÓN (Si se envía el formulario)
+// ==========================================
+$show_snake_btn = false;
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
+    
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $asunto = htmlspecialchars(trim($_POST["asunto"]));
+    $mensaje = htmlspecialchars(trim($_POST["mensaje"]));
+    $telefono = htmlspecialchars(trim($_POST["telefono"]));
+
+    $errores = [];
+
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores[] = "ERROR: E-MAIL INVÁLIDO O VACÍO.";
+    }
+    if (!empty($asunto) && strlen($asunto) < 3) {
+         $errores[] = "ERROR: ASUNTO DEMASIADO CORTO.";
+    }
+    if (empty($mensaje)) {
+         $errores[] = "ERROR: EL MENSAJE ES OBLIGATORIO.";
+    }
+
+    if (empty($errores)) {
+        $stmt = $pdo->prepare("INSERT INTO consultas (email, asunto, mensaje, telefono) VALUES (:email, :asunto, :mensaje, :telefono)");
+        $stmt->execute([
+            'email' => $email,
+            'asunto' => $asunto,
+            'mensaje' => $mensaje,
+            'telefono' => $telefono
+        ]);
+        
+        $terminal_message = ">> VALIDACIÓN SERVIDOR COMPLETA.\n>> DATOS SANITIZADOS Y GUARDADOS EN BD.\n>> [OK] COMANDO REGISTRADO.\n\n>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.\n\n>";
+        $show_snake_btn = true; 
+    } else {
+        $terminal_message = ">> ERROR CRÍTICO DE ENVÍO:\n";
+        foreach ($errores as $error) {
+            $terminal_message .= " - " . $error . "\n";
+        }
+        $terminal_message .= ">> REVISE LOS DATOS Y VUELVA A INTENTAR.\n\n>";
+    }
+}
+
+// ==========================================
+// 4. LECTURA DE DATOS PARA LA SECCIÓN FAQ
+// ==========================================
+$stmt = $pdo->query("SELECT id, asunto, mensaje FROM consultas ORDER BY id DESC");
+$consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -197,12 +279,10 @@
             <h1>Contacto | ¡Get a Byte!</h1>
             
             <div class="pipboy-screen-container">
-                
                 <div class="pipboy-flex-content"> 
-
                     <div class="formulari pipboy-content form-area">
                         <p>// INGRESO DE DATOS</p>
-                        <form action="#" method="POST" class="box pipboy-form" id="pipboy-form">
+                        <form action="index.php#contacto-section" method="POST" class="box pipboy-form" id="pipboy-form">
                             
                             <label for="email">E-mail de Acceso:*</label>
                             <input type="email" id="email" name="email" placeholder="STEVE@GMAIL.COM" required class="pipboy-input">
@@ -216,23 +296,65 @@
                             <label for="telefono">Teléfono de Retorno:</label>
                             <input type="tel" id="telefono" name="telefono" placeholder="EJ: 600 123 456" class="pipboy-input"> 
 
-                            <button type="submit" id="send-command-btn" class="pipboy-button">>> ENVIAR COMANDO</button>
+                            <button type="submit" name="submit_consulta" id="send-command-btn" class="pipboy-button">>> ENVIAR COMANDO</button>
                             
-                            <button type="button" id="snake-byte-btn" class="pipboy-button snake-button" style="display:none;">> SNAKE BYTE <</button>
-                        </form>
+                            </form>
                     </div>
 
                     <div class="pipboy-terminal-carcasa">
                         <div class="pipboy-terminal-screen">
-                            <pre id="feedback-terminal"></pre>
+                            <pre id="feedback-terminal">
+                            <?php
+                            // Lógica para mostrar mensajes de la terminal desde PHP
+                            if (isset($terminal_message)) {
+                                echo htmlspecialchars($terminal_message);
+                            } else {
+                                echo "BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...\n\n>";
+                            }
+                            ?>
+                            </pre>
+                            <?php if (isset($show_snake_btn) && $show_snake_btn): ?>
+                                <a href="index_snake.php" id="snake-byte-btn" class="pipboy-button snake-button">> SNAKE BYTE <</a>
+                            <?php endif; ?>
                         </div>
                     </div>
-
                 </div>
-                
             </div>
         </section>
-        </main>
+
+        <section id="faq-section" class="top">
+            <h1>Consultas / Mensajes</h1>
+            <div class="hours-info" style="width: 80%; margin: 0 auto; max-width: 800px;">
+                
+                <?php if (empty($consultas_faq)): ?>
+                    <p style="text-align: center;"><em>[INFO]: NO SE HAN ENCONTRADO REGISTROS.</em></p>
+                <?php else: ?>
+                    
+                    <ul style="list-style: none; padding: 0;">
+                        <?php foreach ($consultas_faq as $consulta): ?>
+                            <li style="border: 2px solid var(--primary-yellow); padding: 15px; margin-bottom: 15px; border-radius: 5px; background: rgba(0,0,0,0.5); position: relative;">
+                                
+                                <form action="index.php" method="POST" style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="id_consulta" value="<?= $consulta['id']; ?>">
+                                    <button type="submit" name="delete_consulta" class="remove-btn" title="Borrar Consulta">X</button>
+                                </form>
+
+                                <h2 style="color: var(--pipboy-green-fallout); margin-top: 0; font-size: 24px;">
+                                    > <?= empty($consulta['asunto']) ? 'SIN ASUNTO' : htmlspecialchars($consulta['asunto']); ?>
+                                </h2>
+                                <p style="color: white; font-size: 18px; margin-bottom: 0;">
+                                    <?= nl2br(htmlspecialchars($consulta['mensaje'])); ?>
+                                </p>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+
+                <?php endif; ?>
+
+            </div>
+        </section>
+
+    </main>
     
     <footer class="footer">
         <div class="footer-content">
@@ -280,3 +402,56 @@
     <script src="js/main.js"></script> 
 </body>
 </html>
+
+<?php
+// --- LÓGICA DE PROCESAMIENTO PHP ---
+// procesando los datos si el formulario ha sido enviado.
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_consulta'])) {
+    
+    // 1. Recoger y sanitizar datos
+    $email = filter_var(trim($_POST["email"]), FILTER_SANITIZE_EMAIL);
+    $asunto = htmlspecialchars(trim($_POST["asunto"]));
+    $mensaje = htmlspecialchars(trim($_POST["mensaje"]));
+    $telefono = htmlspecialchars(trim($_POST["telefono"]));
+
+    $errores = [];
+
+    // 2. Validación en Servidor
+    if (empty($email)) {
+        $errores[] = "ERROR: E-MAIL ES OBLIGATORIO.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errores[] = "ERROR: FORMATO DE E-MAIL INVÁLIDO.";
+    }
+
+    if (!empty($asunto) && strlen($asunto) < 3) {
+         $errores[] = "ERROR: ASUNTO DEMASIADO CORTO.";
+    }
+
+    if (!empty($telefono)) {
+        // Expresión regular básica para teléfono (adaptar según necesidad)
+        if (!preg_match("/^[0-9\-\+\s\(\)]{9,20}$/", $telefono)) {
+             $errores[] = "ERROR: FORMATO DE TELÉFONO INVÁLIDO.";
+        }
+    }
+
+    // 3. Procesar resultados
+    if (empty($errores)) {
+        // Si no hay errores
+        
+        $terminal_message = ">> VALIDACIÓN SERVIDOR COMPLETA.\n>> DATOS SANITIZADOS Y CORRECTOS.\n>> INICIANDO TRANSMISIÓN A BASE DE DATOS...\n>> [OK] COMANDO REGISTRADO.\n\n>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.\n\n>";
+        
+        // mostrar el botón de Snake
+        $show_snake_btn = true; 
+        
+    } else {
+        // Si hay errores
+        $terminal_message = ">> ERROR CRÍTICO DE ENVÍO:\n";
+        foreach ($errores as $error) {
+            $terminal_message .= " - " . $error . "\n";
+        }
+        $terminal_message .= ">> REVISE LOS DATOS Y VUELVA A INTENTAR.\n\n>";
+        $show_snake_btn = false;
+    }
+}
+?>

@@ -349,197 +349,54 @@ function hideLessItems() {
 }
 
 
-// --- EFECTO MÁQUINA DE ESCRIBIR PARA LA TERMINAL ---
-let terminalContent = ''; 
+// --- EFECTO MÁQUINA DE ESCRIBIR PARA LA TERMINAL (MODIFICADO) ---
 
-function typewriterEffect(element, text) {
-    // 1. Preparamos el nuevo texto, asegurando un salto de línea si ya hay contenido
-    const newMessage = (terminalContent.trim() !== '' ? '\n' : '') + text;
-    terminalContent += newMessage;
+
+function initTerminalTypewriter() {
+    if (!feedbackTerminal) return;
+
+    // Obtenemos el texto que PHP ha inyectado en el HTML
+    const textToType = feedbackTerminal.textContent.trim();
     
-    // 2. Inicializamos la escritura
+   
+    feedbackTerminal.textContent = '';
+    
     let i = 0;
-    const speed = 25; 
-    const currentFullText = element.textContent;
-    
-    // Calculamos el índice donde comienza el nuevo texto
-    const startWriteIndex = currentFullText.length;
-    
-    // Limpiamos el elemento para la animación
-    element.textContent = currentFullText;
-    
+    const speed = 25; // Velocidad de escritura en ms
+
     function type() {
-        if (i < newMessage.length) {
-            // Añadimos el nuevo carácter al final del contenido visible
-            element.textContent += newMessage.charAt(i);
+        if (i < textToType.length) {
+            feedbackTerminal.textContent += textToType.charAt(i);
             i++;
-            
-            // Forzar desplazamiento al final
-            element.scrollTop = element.scrollHeight; 
-            
+            // Mantener el scroll al final
+            feedbackTerminal.scrollTop = feedbackTerminal.scrollHeight; 
             setTimeout(type, speed);
-        } else {
-            // Al finalizar el mensaje, añadimos el prompt (>)
-            element.textContent += '\n\n>';
-            terminalContent += '\n\n>'; // Actualizamos el contenido guardado con el prompt
-            element.scrollTop = element.scrollHeight;
         }
     }
     
-    // Si la terminal está vacía (primer mensaje), empezamos la escritura directamente
-    if (terminalContent.trim() === newMessage.trim()) {
-        element.textContent = '';
-        terminalContent = '';
-        setTimeout(type, speed);
-    } else {
-        // Para mensajes subsiguientes, ejecutamos la animación
-        type();
-    }
+    // Iniciar la animación
+    setTimeout(type, 500); 
 }
 
-// --- LÓGICA DE VALIDACIÓN DE CAMPOS ---
-function validateField(input) {
-    const name = input.name;
-    const value = input.value.trim();
-    let message = '';
-    let isValid = false;
-
-    if (value === '') {
-        if (input.required) {
-            message = validationMessages.vacio;
-            isValid = false;
-        } else {
-            message = `[INFO]: CAMPO OPCIONAL VACÍO. IGNORANDO.`;
-            isValid = true;
-        }
-    } else {
-        // Validaciones complejas (campo tiene contenido)
-        if (name === 'email') {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            isValid = emailRegex.test(value);
-            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
-        } else if (name === 'asunto') {
-            isValid = value.length >= 3;
-            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
-        } else if (name === 'mensaje') {
-            isValid = value.length > 0;
-            message = validationMessages[name].pass;
-        } else if (name === 'telefono') {
-            const phoneRegex = /^\s*(?:\+?(\d{1,3}))?([-(]?(\d{3})[)-]?)?([ -]?(\d{4}))([ -]?(\d{4}))\s*$/;
-            isValid = phoneRegex.test(value);
-            message = isValid ? validationMessages[name].pass : validationMessages[name].fail;
-        }
-    }
-    
-    input.setAttribute('data-valid', isValid);
-    typewriterEffect(feedbackTerminal, `${name.toUpperCase()} STATUS:\n${message}`);
-    
-    return isValid;
-}
-
-
-// --- FUNCIÓN: MANEJAR EL ENVÍO DEL FORMULARIO ---
-function handleFormSubmit(e) {
-    e.preventDefault(); 
-
-    let allFieldsValid = true;
-    let missingRequiredFields = false;
-
-    // 1. Recorre todos los inputs para forzar la validación final y verificar el estado
-    formInputs.forEach(input => {
-        const isValid = validateField(input);
-        
-        if (!isValid) {
-            allFieldsValid = false;
-            if (input.required && input.value.trim() === '') {
-                missingRequiredFields = true;
-            }
-        }
-    });
-
-    // 2. Reporta el resultado final y controla la visibilidad de los botones
-    if (allFieldsValid) {
-        typewriterEffect(feedbackTerminal, 
-            '>> VALIDACIÓN COMPLETA. TODOS LOS CAMPOS CORRECTOS.\n' + 
-            '>> INICIANDO TRANSMISIÓN DE DATOS...\n' + 
-            '>> MENSAJE ENVIADO. ESPERE RESPUESTA DE LA BASE DE DATOS.\n\n' +
-            '>> [INFO]: SECUENCIA DE JUEGO DETECTADA: SNAKE BYTE. LISTO PARA INICIAR.');
-        
-        // MOSTRAR BOTÓN SNAKE y OCULTAR ENVÍO
-        if (sendCommandBtn) sendCommandBtn.style.display = 'none';
-        if (snakeByteBtn) snakeByteBtn.style.display = 'inline-block';
-        
-        // Limpiar los campos para simular el envío exitoso
-        pipboyForm.reset(); 
-
-    } else if (missingRequiredFields) {
-         typewriterEffect(feedbackTerminal, 
-            '>> ERROR CRÍTICO DE ENVÍO: FALTAN CAMPOS REQUERIDOS (*).\n' + 
-            '>> VERIFIQUE LA INFORMACIÓN E INTENTE DE NUEVO.');
-        
-        // Asegurar que el botón SNAKE esté oculto
-        if (snakeByteBtn) snakeByteBtn.style.display = 'none';
-        if (sendCommandBtn) sendCommandBtn.style.display = 'inline-block';
-
-    } else {
-        typewriterEffect(feedbackTerminal, 
-            '>> ERROR DE ENVÍO: ALGUNOS DATOS SON INVÁLIDOS.\n' + 
-            '>> AJUSTE LOS PARÁMETROS Y VUELVA A INTENTAR.');
-        
-        // Asegurar que el botón SNAKE esté oculto
-        if (snakeByteBtn) snakeByteBtn.style.display = 'none';
-        if (sendCommandBtn) sendCommandBtn.style.display = 'inline-block';
-    }
-}
-
-
-// --- ESCUCHADORES DE LA TERMINAL ---
 function setupTerminalListeners() {
-    // 1. Escuchadores de validación al perder el foco (blur)
-    formInputs.forEach(input => {
-        input.addEventListener('blur', () => validateField(input));
-    });
-    
-    // 2. Escuchador para el evento de ENVÍO
-    if (pipboyForm) {
-        pipboyForm.addEventListener('submit', handleFormSubmit);
-    }
-    
-    // 3. NUEVO: Escuchador para el botón SNAKE (REDIRECCIÓN)
-    if (snakeByteBtn) {
-        snakeByteBtn.addEventListener('click', () => {
-            // Redirige al subdirectorio 'snake/'
-            window.location.href = './snake/index.html'; 
-        });
-    }
-    
-    // Mensaje inicial de la terminal
-    terminalContent = ''; 
-    typewriterEffect(feedbackTerminal, 'BIENVENIDO A BURGER BYTES TERMINAL V1.0\nCARGANDO PROTOCOLOS DE CONTACTO...');
-}
 
+    initTerminalTypewriter();
+}
 
 // --- Event Listeners y Configuración Inicial ---
-
 function setupListeners() {
-    // Escuchadores del Carrito
+
     setupCartListeners();
     setupAddButtons(); 
-    
-    // Escuchadores de Navegación
+ 
     setupNavLinks();
-    
-    // Escuchador para el logo (Vuelve a Inicio)
     if (navLogo) navLogo.addEventListener('click', handleLogoClick);
 
-    // Escuchadores de la Carta (Ver Más/Menos)
     if (loadMoreBtn) loadMoreBtn.addEventListener('click', loadMoreItems);
     if (hideLessBtn) hideLessBtn.addEventListener('click', hideLessItems);
     
-    // Escuchadores de la Terminal
+    // Iniciar la terminal
     setupTerminalListeners();
 }
 
-
-// Inicializa la página después de que el DOM esté completamente cargado
 document.addEventListener('DOMContentLoaded', setInitialLayout);
