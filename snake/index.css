@@ -20,24 +20,37 @@ body {
 }
 
 /* --- ESTILOS DEL BOTÓN DE INICIO (LOGO) --- */
+/* --- BOTÓN DE VOLVER (LOGO) --- */
 #back-to-home {
     position: absolute;
-    top: -40px; /* Sube el logo fuera del contenedor */
-    left: -40px; /* Mueve el logo fuera del contenedor */
-    z-index: 10;
-    display: block;
-    border: 3px solid #FFC300;
-    border-radius: 50%;
-    overflow: hidden;
-    transition: transform 0.2s;
+    top: 30px;
+    left: 40px;
+    text-decoration: none;
+    outline: none;
+    border: none;
+    background: transparent;
+    transition: transform 0.2s ease;
+    z-index: 100; /* Asegura que siempre se pueda hacer clic */
 }
 
-#back-to-home:hover {
-    transform: scale(1.1);
-}
-
+/* Matamos el círculo feo y le damos estilo arcade */
 #back-to-home img {
-    display: block;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+    border-radius: 0 !important; 
+    box-shadow: none !important;
+    filter: drop-shadow(2px 2px 0px black) drop-shadow(0 0 8px #80FF80);
+    transition: filter 0.3s ease;
+}
+
+/* Animación al pasar el ratón por encima */
+#back-to-home:hover {
+    transform: scale(1.15) rotate(-5deg);
+}
+
+#back-to-home:hover img {
+    filter: drop-shadow(4px 4px 0px black) drop-shadow(0 0 15px yellow);
 }
 
 /* --- CONTINUACIÓN DEL ESTILO DEL JUEGO --- */
@@ -72,35 +85,57 @@ h1 {
 
 /* --- ESTILOS DE LOS ELEMENTOS DEL JUEGO --- */
 
+/* --- VISUALES DE LA SERPIENTE --- */
 .snake {
-    background-color: #4CAF50; /* Verde de la serpiente */
-    border-radius: 2px;
+    background-color: var(--pipboy-green-fallout, #80FF80);
+    box-shadow: 0 0 5px #80FF80; /* Brillo de neón retro */
+    border-radius: 3px; /* Bordes un poco redondeados para que parezca un cuerpo orgánico */
+    border: 1px solid rgba(0, 0, 0, 0.3); /* Separación entre los trozos del cuerpo */
 }
 
-.head {
-    background-color: #2E8B57; /* Verde más oscuro para la cabeza */
+/* La cabeza de la serpiente */
+.snake.head {
+    background-color: #00FF00; /* Un verde más intenso */
+    box-shadow: 0 0 10px #00FF00, 0 0 20px #00FF00; /* Brillo doble */
+    border-radius: 6px; /* Cabeza más redondeada */
     position: relative;
-    border-radius: 4px;
+    z-index: 10;
 }
 
-/*
-  La hamburguesa de pixel art la implementaremos usando el fondo y sombras CSS.
-  Es más simple que usar el canvas para este tipo de juego.
-*/
+/* Los ojitos de la serpiente (pura magia CSS) */
+.snake.head::before, .snake.head::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background-color: black;
+    border-radius: 50%;
+    top: 4px; /* Posición de los ojos */
+}
+
+.snake.head::before { left: 3px; }
+.snake.head::after { right: 3px; }
+
+/* --- VISUALES DE LA COMIDA (LA GOLDEN BURGER) --- */
 .hamburger {
-    /* 20px x 20px cell */
-    position: relative;
-    background: 
-        /* Pan superior (más claro) */
-        linear-gradient(to top, #FFD700 50%, transparent 50%) 0px 4px / 20px 8px no-repeat,
-        /* Queso/Lechuga (medio) */
-        linear-gradient(to top, #3CB371 50%, transparent 50%) 0px 8px / 20px 4px no-repeat,
-        /* Carne (oscuro) */
-        linear-gradient(to top, #8B4513 50%, transparent 50%) 0px 12px / 20px 4px no-repeat,
-        /* Pan inferior (más oscuro) */
-        #A0522D;
+    background-color: transparent !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px; 
+    animation: pulse-burger 0.6s infinite alternate; /* Animación de latido */
+}
 
-    background-size: 20px 20px;
+
+.hamburger::before {
+    content: "🍔";
+    filter: drop-shadow(0 0 5px yellow); 
+}
+
+/* Animación del latido de la hamburguesa */
+@keyframes pulse-burger {
+    from { transform: scale(0.85); }
+    to { transform: scale(1.15); }
 }
 
 /* --- MENSAJES DE JUEGO --- */
@@ -141,4 +176,108 @@ h1 {
 
 #restart-button:hover {
     background-color: #388E3C;
+}
+/* --- LAYOUT PRINCIPAL --- */
+#main-layout {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: 20px;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+/* --- LEADERBOARD (HALL OF FAME) --- */
+#leaderboard-container {
+    background-color: #111;
+    border: 4px solid yellow;
+    padding: 20px;
+    color: white;
+    width: 250px;
+    box-shadow: 4px 4px 0 0 black, 0 0 15px yellow;
+}
+
+#leaderboard-container h2 {
+    text-align: center;
+    color: yellow;
+    margin-top: 0;
+    text-shadow: 2px 2px 0 red;
+}
+
+#leaderboard-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#leaderboard-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #444;
+    font-size: 18px;
+}
+
+#leaderboard-list li .rank { color: red; width: 30px; }
+#leaderboard-list li .name { color: #80FF80; flex-grow: 1; text-align: center; letter-spacing: 2px;}
+#leaderboard-list li .points { color: yellow; text-align: right; width: 50px; }
+
+/* --- RECUADRO INICIALES --- */
+#score-input-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: rgba(0,0,0,0.8);
+    border: 2px solid #80FF80;
+}
+
+#player-initials {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 24px;
+    width: 80px;
+    text-align: center;
+    text-transform: uppercase;
+    background: black;
+    color: #80FF80;
+    border: 2px solid yellow;
+    padding: 5px;
+    outline: none;
+}
+
+#player-initials:focus {
+    box-shadow: 0 0 10px yellow;
+}
+
+#save-score-btn {
+    font-family: 'Pixelify Sans', sans-serif;
+    background: green;
+    color: white;
+    border: 2px solid white;
+    padding: 8px 15px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+#save-score-btn:hover { background: limegreen; }
+
+/* Ocultar elementos */
+.hidden { display: none ; }
+/* --- EFECTO DE SACUDIDA (SCREEN SHAKE) --- */
+@keyframes shake {
+    0% { transform: translate(2px, 1px) rotate(0deg); }
+    10% { transform: translate(-2px, -3px) rotate(-1deg); }
+    20% { transform: translate(-4px, 0px) rotate(1deg); }
+    30% { transform: translate(4px, 3px) rotate(0deg); }
+    40% { transform: translate(2px, -2px) rotate(1deg); }
+    50% { transform: translate(-2px, 3px) rotate(-1deg); }
+    60% { transform: translate(-4px, 2px) rotate(0deg); }
+    70% { transform: translate(4px, 2px) rotate(-1deg); }
+    80% { transform: translate(-2px, -2px) rotate(1deg); }
+    90% { transform: translate(2px, 3px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+/* Esta clase se la pondremos al contenedor con JavaScript cuando mueras */
+.shake-effect {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
 }

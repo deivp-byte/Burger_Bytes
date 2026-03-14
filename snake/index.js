@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0;
     let gameLoopInterval;
     let gameSpeed = 150; // Velocidad inicial en milisegundos
+    let gameStarted = false; // Estado del juego
 
     // --- FUNCIONES DE INICIALIZACIÓN ---
 
@@ -52,16 +53,23 @@ document.addEventListener('DOMContentLoaded', () => {
      * Inicia o reinicia el estado del juego.
      */
     function initGame() {
+        // Asegurarse de que el temblor no esté activo
+        document.getElementById('main-layout').classList.remove('shake-effect');
+        
         snake = [{ x: 10, y: 10 }];
         dx = 1;
         dy = 0;
         score = 0;
         gameSpeed = 150;
         scoreElement.textContent = score;
+        
+        // Escondemos las pantallas superpuestas
         messageOverlay.classList.add('hidden');
+        document.getElementById('score-input-section').classList.add('hidden');
 
         createGrid();
         generateFood();
+        drawGame(); // Dibujamos el primer frame INMEDIATAMENTE
         startGameLoop();
     }
 
@@ -115,9 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startGameLoop(); // Reinicia el bucle con la nueva velocidad
     }
 
-    /**
-     * Dibuja la serpiente y la comida en el tablero.
-     */
     function drawGame() {
         // Limpia las clases de todas las celdas
         document.querySelectorAll('.cell').forEach(cell => {
@@ -154,16 +159,54 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {string} message Mensaje de Game Over.
      */
     function gameOver(message) {
+        gameStarted = false; // El juego ya no está activo
         clearInterval(gameLoopInterval);
-        gameMessage.textContent = `¡GAME OVER! ${message} Puntuación final: ${score}`;
+        
+        // Aplicamos la sacudida
+        document.getElementById('main-layout').classList.add('shake-effect');
+        
+        gameMessage.textContent = `¡GAME OVER! ${message} Puntuación: ${score}`;
+        
+        const scoreSection = document.getElementById('score-input-section');
+        const initialsInput = document.getElementById('player-initials');
+        
+        if (score > 0) {
+            scoreSection.classList.remove('hidden');
+            initialsInput.value = '';
+            setTimeout(() => initialsInput.focus(), 100); 
+        } else {
+            scoreSection.classList.add('hidden');
+        }
+
+        // Preparamos el botón para volver a jugar
+        restartButton.textContent = 'Jugar de Nuevo';
         messageOverlay.classList.remove('hidden');
     }
 
-    // --- MANEJO DE TECLADO ---
+    // --- FUNCIONES DE INICIO DE PANTALLA ---
+    function showStartScreen() {
+        messageOverlay.classList.remove('hidden');
+        gameMessage.textContent = '>> PRESS START <<';
+        
+        document.getElementById('score-input-section').classList.add('hidden');
+        restartButton.textContent = 'INICIAR JUEGO';
+        restartButton.style.display = 'inline-block';
+        
+        createGrid(); 
+    }
 
+    // --- MANEJO DE TECLADO MEJORADO ---
     document.addEventListener('keydown', (e) => {
-        // Solo permite cambiar la dirección si no es la dirección opuesta a la actual
-        // (La serpiente no puede girar 180 grados instantáneamente)
+        // Si el juego NO ha empezado y pulsas Enter o Espacio, empieza.
+        if (!gameStarted && (e.key === 'Enter' || e.key === ' ')) {
+            e.preventDefault(); // Evita que la página baje al pulsar espacio
+            gameStarted = true;
+            initGame();
+            return;
+        }
+
+        if (!gameStarted) return; // Si no ha empezado, no leemos las flechas de dirección
+
         switch (e.key) {
             case 'ArrowUp':
             case 'w':
@@ -184,9 +227,55 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- EVENTOS ---
-    restartButton.addEventListener('click', initGame);
+    // --- EVENTOS DE BOTONES ---
+    restartButton.addEventListener('click', () => {
+        gameStarted = true;
+        initGame();
+    });
 
-    // Iniciar el juego al cargar la página
-    initGame();
+    const backToHomeBtn = document.getElementById('back-to-home');
+    if (backToHomeBtn) {
+        backToHomeBtn.addEventListener('click', (e) => {
+            e.preventDefault(); 
+            window.location.href = '/Proyecto/index.php'; 
+        });
+    }
+
+    // --- GUARDAR PUNTUACIÓN EN LA BASE DE DATOS ---
+    const saveScoreBtn = document.getElementById('save-score-btn');
+    if (saveScoreBtn) {
+        saveScoreBtn.addEventListener('click', () => {
+            const initialsInput = document.getElementById('player-initials');
+            let initials = initialsInput.value.trim().toUpperCase();
+            
+            if (initials.length === 0) initials = 'UNK'; 
+
+            saveScoreBtn.textContent = 'GUARDANDO...';
+            saveScoreBtn.disabled = true;
+
+            fetch('guardar_puntuaciones.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ nombre: initials, puntuacion: score })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                } else {
+                    alert('Error al guardar: ' + data.error);
+                    saveScoreBtn.textContent = 'GUARDAR';
+                    saveScoreBtn.disabled = false;
+                }
+            })
+            .catch(err => {
+                alert('Error de conexión');
+                saveScoreBtn.textContent = 'GUARDAR';
+                saveScoreBtn.disabled = false;
+            });
+        });
+    }
+
+    // --- ARRANQUE INICIAL ---
+    showStartScreen();
 });

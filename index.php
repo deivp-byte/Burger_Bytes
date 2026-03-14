@@ -314,7 +314,7 @@ $consultas_faq = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 ?>
                             </pre>
                             <?php if (isset($show_snake_btn) && $show_snake_btn): ?>
-                                <a href="index_snake.php" id="snake-byte-btn" class="pipboy-button snake-button" style="display:inline-block; text-decoration:none;">> SNAKE BYTE <</a>
+                                <a href="snake/index_snake.php" id="snake-byte-btn" class="pipboy-button snake-button" style="display:inline-block; text-decoration:none;">> SNAKE BYTE <</a>
                             <?php endif; ?>
                         </div>
                     </div>
