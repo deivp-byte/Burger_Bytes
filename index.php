@@ -1,20 +1,5 @@
 <?php
-// ==========================================
-// 1. CONEXIÓN A LA BASE DE DATOS POSTGRESQL (AIVEN)
-// ==========================================
-$host = 'deivid123-deividprueba.c.aivencloud.com'; 
-$port = '14862';       
-$dbname = 'burger_bytes'; 
-$user = 'avnadmin';      
-$password = 'AVNS_UhqeIZJ-Luzsf6oVbO0'; 
-
-$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
-
-try {
-    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-} catch (PDOException $e) {
-    die("Error de conexión a la base de datos: " . $e->getMessage());
-}
+require_once 'connection.php';
 // ==========================================
 // 2. LÓGICA DE BORRADO (Si se hace clic en la 'X')
 // ==========================================

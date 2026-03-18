@@ -11,14 +11,7 @@ if (!$data || !isset($data['nombre']) || !isset($data['puntuacion'])) {
 $nombre = strtoupper(substr(trim(htmlspecialchars($data['nombre'])), 0, 3)); 
 $puntuacion = filter_var($data['puntuacion'], FILTER_VALIDATE_INT);
 
-// CREDENCIALES EXACTAS DE TU AIVEN
-$host = 'deivid123-deividprueba.c.aivencloud.com'; 
-$port = '14862';       
-$dbname = 'burger_bytes'; 
-$user = 'avnadmin';      
-$password = 'AVNS_UhqeIZJ-Luzsf6oVbO0'; 
-
-$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+require_once 'connection.php';
 
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);

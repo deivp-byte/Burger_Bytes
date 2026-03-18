@@ -1,12 +1,5 @@
 <?php
-
-$host = 'deivid123-deividprueba.c.aivencloud.com'; 
-$port = '14862';       
-$dbname = 'burger_bytes'; 
-$user = 'avnadmin';      
-$password = 'AVNS_UhqeIZJ-Luzsf6oVbO0';
-
-$dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+require_once 'connection.php';
 $top_scores = [];
 
 try {
