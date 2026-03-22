@@ -11,7 +11,7 @@ if (!$data || !isset($data['nombre']) || !isset($data['puntuacion'])) {
 $nombre = strtoupper(substr(trim(htmlspecialchars($data['nombre'])), 0, 3)); 
 $puntuacion = filter_var($data['puntuacion'], FILTER_VALIDATE_INT);
 
-require_once 'connection.php';
+require_once '../connection.php';
 
 try {
     $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
